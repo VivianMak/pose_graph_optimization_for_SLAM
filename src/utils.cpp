@@ -21,7 +21,12 @@ public:
     // Parent node (previous in sequence)
     Node* parent;
 
-    // Insert constructor
+    // Begin constructor
+    Node(float x_, float y_, float theta_, Node* parent_ = nullptr)
+    : x(x_), y(y_), theta(theta_), parent(parent_) {
+    // Initialize transform as identity matrix
+    transform_mat = {{{1.0, 0.0, 0.0},{0.0, 1.0, 0.0},{0.0, 0.0, 1.0}}};
+    }
 };
 
 class Edge {
@@ -33,7 +38,9 @@ public:
     float dy;
     float dtheta;
 
-
+    // Begin constructor
+    Edge(int from, int to, float dx_, float dy_, float dtheta_)
+        : from_id(from), to_id(to), dx(dx_), dy(dy_), dtheta(dtheta_) {}
 };
 
 class PoseGraph {
