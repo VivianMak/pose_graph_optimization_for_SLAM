@@ -1,9 +1,0 @@
-/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_description/CMakeFiles/uninstall.dir
-/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_description/CMakeFiles/turtlebot4_description_uninstall.dir
-/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_description/CMakeFiles/test.dir
-/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_description/CMakeFiles/edit_cache.dir
-/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_description/CMakeFiles/rebuild_cache.dir
-/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_description/CMakeFiles/list_install_components.dir
-/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_description/CMakeFiles/install.dir
-/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_description/CMakeFiles/install/local.dir
-/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_description/CMakeFiles/install/strip.dir

@@ -1,1 +1,0 @@
-/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/src/turtlebot4_navigation/launch/nav2.launch.py
