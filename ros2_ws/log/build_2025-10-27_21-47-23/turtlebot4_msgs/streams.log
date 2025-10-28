@@ -1,0 +1,180 @@
+[0.015s] Invoking command in '/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_msgs': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy:/opt/ros/humble DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/src/turtlebot4_msgs -DCMAKE_INSTALL_PREFIX=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs
+[0.024s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[0.046s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[0.109s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.116s] -- Found ament_lint_auto: 0.17.3 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[0.186s] -- Found rosidl_default_generators: 1.6.0 (/opt/ros/jazzy/share/rosidl_default_generators/cmake)
+[0.188s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.217s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.238s] -- Found rosidl_adapter: 4.6.6 (/opt/ros/jazzy/share/rosidl_adapter/cmake)
+[0.239s] -- Found std_msgs: 5.3.6 (/opt/ros/jazzy/share/std_msgs/cmake)
+[0.418s] -- Found ament_cmake_ros: 0.12.0 (/opt/ros/jazzy/share/ament_cmake_ros/cmake)
+[0.491s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.580s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.581s] -- Found python_cmake_module: 0.11.1 (/opt/ros/jazzy/share/python_cmake_module/cmake)
+[0.935s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter Development NumPy Development.Module Development.Embed 
+[0.946s] -- Added test 'copyright' to check source files copyright and LICENSE
+[0.947s] -- Added test 'lint_cmake' to check CMake code style
+[0.947s] -- Added test 'xmllint' to check XML markup files
+[0.951s] -- Configuring done (0.9s)
+[0.972s] -- Generating done (0.0s)
+[0.979s] -- Build files have been written to: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_msgs
+[0.983s] Invoked command in '/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_msgs' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy:/opt/ros/humble DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/src/turtlebot4_msgs -DCMAKE_INSTALL_PREFIX=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs
+[0.983s] Invoking command in '/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_msgs': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy:/opt/ros/humble DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_msgs -- -j20 -l20
+[1.029s] [  1%] Built target turtlebot4_msgs__rosidl_generator_type_description
+[1.035s] [  1%] Built target ament_cmake_python_symlink_turtlebot4_msgs
+[1.045s] [  3%] Built target turtlebot4_msgs__cpp
+[1.046s] [ 24%] Built target turtlebot4_msgs__rosidl_generator_c
+[1.069s] [ 33%] Built target turtlebot4_msgs__rosidl_typesupport_cpp
+[1.070s] [ 42%] Built target turtlebot4_msgs__rosidl_typesupport_fastrtps_c
+[1.071s] [ 51%] Built target turtlebot4_msgs__rosidl_typesupport_c
+[1.072s] [ 61%] Built target turtlebot4_msgs__rosidl_typesupport_introspection_c
+[1.073s] [ 70%] Built target turtlebot4_msgs__rosidl_typesupport_fastrtps_cpp
+[1.073s] [ 79%] Built target turtlebot4_msgs__rosidl_typesupport_introspection_cpp
+[1.094s] [ 79%] Built target turtlebot4_msgs
+[1.114s] [ 81%] Built target turtlebot4_msgs__py
+[1.138s] [ 88%] Built target turtlebot4_msgs__rosidl_generator_py
+[1.157s] [ 92%] Built target turtlebot4_msgs_s__rosidl_typesupport_c
+[1.161s] [ 96%] Built target turtlebot4_msgs_s__rosidl_typesupport_introspection_c
+[1.162s] [100%] Built target turtlebot4_msgs_s__rosidl_typesupport_fastrtps_c
+[1.199s] running egg_info
+[1.211s] writing turtlebot4_msgs.egg-info/PKG-INFO
+[1.211s] writing dependency_links to turtlebot4_msgs.egg-info/dependency_links.txt
+[1.211s] writing top-level names to turtlebot4_msgs.egg-info/top_level.txt
+[1.244s] reading manifest file 'turtlebot4_msgs.egg-info/SOURCES.txt'
+[1.244s] writing manifest file 'turtlebot4_msgs.egg-info/SOURCES.txt'
+[1.265s] [100%] Built target ament_cmake_python_build_turtlebot4_msgs_egg
+[1.273s] Invoked command in '/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_msgs' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy:/opt/ros/humble DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_msgs -- -j20 -l20
+[1.274s] Invoking command in '/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_msgs': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy:/opt/ros/humble DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_msgs
+[1.280s] -- Install configuration: ""
+[1.280s] -- Execute custom install script
+[1.280s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/ament_index/resource_index/rosidl_interfaces/turtlebot4_msgs
+[1.281s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/msg/UserLed.json
+[1.281s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/msg/UserButton.json
+[1.281s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/msg/UserDisplay.json
+[1.281s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_button__functions.h
+[1.281s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_button__struct.h
+[1.281s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_button__type_support.h
+[1.281s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_display__functions.h
+[1.281s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_display__struct.h
+[1.281s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_display__type_support.h
+[1.281s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_led__functions.h
+[1.282s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_led__struct.h
+[1.282s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_led__type_support.h
+[1.282s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/rosidl_generator_c__visibility_control.h
+[1.282s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/user_button.h
+[1.282s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/user_display.h
+[1.282s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/user_led.h
+[1.282s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/environment/library_path.sh
+[1.282s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/environment/library_path.dsv
+[1.282s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_button__rosidl_typesupport_fastrtps_c.h
+[1.282s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_display__rosidl_typesupport_fastrtps_c.h
+[1.282s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_led__rosidl_typesupport_fastrtps_c.h
+[1.282s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/rosidl_typesupport_fastrtps_c__visibility_control.h
+[1.283s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_button__rosidl_typesupport_introspection_c.h
+[1.283s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_display__rosidl_typesupport_introspection_c.h
+[1.283s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_led__rosidl_typesupport_introspection_c.h
+[1.283s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/rosidl_typesupport_introspection_c__visibility_control.h
+[1.283s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_button__builder.hpp
+[1.283s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_button__struct.hpp
+[1.283s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_button__traits.hpp
+[1.283s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_button__type_support.hpp
+[1.283s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_display__builder.hpp
+[1.283s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_display__struct.hpp
+[1.283s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_display__traits.hpp
+[1.283s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_display__type_support.hpp
+[1.283s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_led__builder.hpp
+[1.284s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_led__struct.hpp
+[1.284s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_led__traits.hpp
+[1.284s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_led__type_support.hpp
+[1.284s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/rosidl_generator_cpp__visibility_control.hpp
+[1.284s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/user_button.hpp
+[1.284s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/user_display.hpp
+[1.284s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/user_led.hpp
+[1.284s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_button__rosidl_typesupport_fastrtps_cpp.hpp
+[1.284s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_display__rosidl_typesupport_fastrtps_cpp.hpp
+[1.284s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_led__rosidl_typesupport_fastrtps_cpp.hpp
+[1.284s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/rosidl_typesupport_fastrtps_cpp__visibility_control.h
+[1.284s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_button__rosidl_typesupport_introspection_cpp.hpp
+[1.284s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_display__rosidl_typesupport_introspection_cpp.hpp
+[1.284s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/include/turtlebot4_msgs/turtlebot4_msgs/msg/detail/user_led__rosidl_typesupport_introspection_cpp.hpp
+[1.285s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/environment/pythonpath.sh
+[1.285s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/environment/pythonpath.dsv
+[1.285s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs-2.1.1-py3.12.egg-info/PKG-INFO
+[1.285s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs-2.1.1-py3.12.egg-info/SOURCES.txt
+[1.285s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs-2.1.1-py3.12.egg-info/dependency_links.txt
+[1.285s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs-2.1.1-py3.12.egg-info/top_level.txt
+[1.285s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/__init__.py
+[1.285s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/_turtlebot4_msgs_s.ep.rosidl_typesupport_c.c
+[1.285s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/_turtlebot4_msgs_s.ep.rosidl_typesupport_fastrtps_c.c
+[1.285s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/_turtlebot4_msgs_s.ep.rosidl_typesupport_introspection_c.c
+[1.285s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/msg/__init__.py
+[1.285s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/msg/_user_button.py
+[1.285s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/msg/_user_button_s.c
+[1.286s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/msg/_user_display.py
+[1.286s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/msg/_user_display_s.c
+[1.286s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/msg/_user_led.py
+[1.286s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/msg/_user_led_s.c
+[1.286s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/turtlebot4_msgs_s__rosidl_typesupport_c.so
+[1.286s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/turtlebot4_msgs_s__rosidl_typesupport_fastrtps_c.so
+[1.286s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/turtlebot4_msgs_s__rosidl_typesupport_introspection_c.so
+[1.286s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/turtlebot4_msgs_s__rosidl_typesupport_fastrtps_c.so
+[1.286s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/turtlebot4_msgs_s__rosidl_typesupport_introspection_c.so
+[1.286s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/turtlebot4_msgs_s__rosidl_typesupport_c.so
+[1.286s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/msg/UserLed.idl
+[1.286s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/msg/UserButton.idl
+[1.286s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/msg/UserDisplay.idl
+[1.286s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/msg/UserLed.msg
+[1.287s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/msg/UserButton.msg
+[1.287s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/msg/UserDisplay.msg
+[1.287s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/ament_index/resource_index/package_run_dependencies/turtlebot4_msgs
+[1.287s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/ament_index/resource_index/parent_prefix_path/turtlebot4_msgs
+[1.287s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/environment/ament_prefix_path.sh
+[1.287s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/environment/ament_prefix_path.dsv
+[1.287s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/environment/path.sh
+[1.287s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/environment/path.dsv
+[1.287s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/local_setup.bash
+[1.287s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/local_setup.sh
+[1.287s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/local_setup.zsh
+[1.287s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/local_setup.dsv
+[1.287s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/package.dsv
+[1.292s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/ament_index/resource_index/packages/turtlebot4_msgs
+[1.292s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/rosidl_cmake-extras.cmake
+[1.292s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/ament_cmake_export_include_directories-extras.cmake
+[1.293s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/ament_cmake_export_libraries-extras.cmake
+[1.293s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/ament_cmake_export_targets-extras.cmake
+[1.293s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/rosidl_cmake_export_typesupport_targets-extras.cmake
+[1.293s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/ament_cmake_export_dependencies-extras.cmake
+[1.293s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake
+[1.293s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/turtlebot4_msgsConfig.cmake
+[1.293s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/turtlebot4_msgsConfig-version.cmake
+[1.293s] -- Up-to-date symlink: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/package.xml
+[1.293s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/libturtlebot4_msgs__rosidl_generator_c.so
+[1.293s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/libturtlebot4_msgs__rosidl_typesupport_fastrtps_c.so
+[1.293s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/libturtlebot4_msgs__rosidl_typesupport_introspection_c.so
+[1.293s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/libturtlebot4_msgs__rosidl_typesupport_c.so
+[1.294s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/libturtlebot4_msgs__rosidl_typesupport_fastrtps_cpp.so
+[1.294s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/libturtlebot4_msgs__rosidl_typesupport_introspection_cpp.so
+[1.294s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/libturtlebot4_msgs__rosidl_typesupport_cpp.so
+[1.320s] Listing '/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs'...
+[1.320s] Compiling '/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/__init__.py'...
+[1.320s] Listing '/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages/turtlebot4_msgs/msg'...
+[1.323s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/libturtlebot4_msgs__rosidl_generator_py.so
+[1.324s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/export_turtlebot4_msgs__rosidl_generator_cExport.cmake
+[1.324s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/export_turtlebot4_msgs__rosidl_generator_cExport-noconfig.cmake
+[1.324s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/export_turtlebot4_msgs__rosidl_typesupport_fastrtps_cExport.cmake
+[1.324s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/export_turtlebot4_msgs__rosidl_typesupport_fastrtps_cExport-noconfig.cmake
+[1.324s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/turtlebot4_msgs__rosidl_typesupport_introspection_cExport.cmake
+[1.324s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/turtlebot4_msgs__rosidl_typesupport_introspection_cExport-noconfig.cmake
+[1.324s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/turtlebot4_msgs__rosidl_typesupport_cExport.cmake
+[1.324s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/turtlebot4_msgs__rosidl_typesupport_cExport-noconfig.cmake
+[1.324s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/export_turtlebot4_msgs__rosidl_generator_cppExport.cmake
+[1.324s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/export_turtlebot4_msgs__rosidl_typesupport_fastrtps_cppExport.cmake
+[1.324s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/export_turtlebot4_msgs__rosidl_typesupport_fastrtps_cppExport-noconfig.cmake
+[1.325s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/turtlebot4_msgs__rosidl_typesupport_introspection_cppExport.cmake
+[1.325s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/turtlebot4_msgs__rosidl_typesupport_introspection_cppExport-noconfig.cmake
+[1.325s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/turtlebot4_msgs__rosidl_typesupport_cppExport.cmake
+[1.325s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/turtlebot4_msgs__rosidl_typesupport_cppExport-noconfig.cmake
+[1.325s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/export_turtlebot4_msgs__rosidl_generator_pyExport.cmake
+[1.325s] -- Up-to-date: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake/export_turtlebot4_msgs__rosidl_generator_pyExport-noconfig.cmake
+[1.326s] Invoked command in '/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_msgs' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy:/opt/ros/humble DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_msgs

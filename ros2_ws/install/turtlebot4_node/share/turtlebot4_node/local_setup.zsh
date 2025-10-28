@@ -1,0 +1,1 @@
+/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_node/ament_cmake_environment_hooks/local_setup.zsh

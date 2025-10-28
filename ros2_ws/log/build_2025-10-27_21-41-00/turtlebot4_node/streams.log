@@ -1,0 +1,86 @@
+[0.007s] Invoking command in '/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_node': AMENT_PREFIX_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy:/opt/ros/humble DEBUGINFOD_URLS=https://debuginfod.ubuntu.com LD_LIBRARY_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/src/turtlebot4_node -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node
+[0.054s] -- The C compiler identification is GNU 13.3.0
+[0.093s] -- The CXX compiler identification is GNU 13.3.0
+[0.107s] -- Detecting C compiler ABI info
+[0.194s] -- Detecting C compiler ABI info - done
+[0.202s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.202s] -- Detecting C compile features
+[0.202s] -- Detecting C compile features - done
+[0.211s] -- Detecting CXX compiler ABI info
+[0.297s] -- Detecting CXX compiler ABI info - done
+[0.307s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.307s] -- Detecting CXX compile features
+[0.307s] -- Detecting CXX compile features - done
+[0.311s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[0.422s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[0.465s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.492s] -- Found rclcpp: 28.1.12 (/opt/ros/jazzy/share/rclcpp/cmake)
+[0.523s] -- Found rosidl_generator_c: 4.6.6 (/opt/ros/jazzy/share/rosidl_generator_c/cmake)
+[0.533s] -- Found rosidl_generator_cpp: 4.6.6 (/opt/ros/jazzy/share/rosidl_generator_cpp/cmake)
+[0.544s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.556s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.608s] -- Found rmw_implementation_cmake: 7.3.2 (/opt/ros/jazzy/share/rmw_implementation_cmake/cmake)
+[0.611s] -- Found rmw_fastrtps_cpp: 8.4.3 (/opt/ros/jazzy/share/rmw_fastrtps_cpp/cmake)
+[0.688s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.13")  
+[0.702s] -- Found FastRTPS: /opt/ros/jazzy/include (Required is at least version "2.13") 
+[0.718s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.767s] -- Found rclcpp_action: 28.1.12 (/opt/ros/jazzy/share/rclcpp_action/cmake)
+[0.796s] -- Found std_msgs: 5.3.6 (/opt/ros/jazzy/share/std_msgs/cmake)
+[0.806s] -- Found std_srvs: 5.3.6 (/opt/ros/jazzy/share/std_srvs/cmake)
+[0.817s] -- Found sensor_msgs: 5.3.6 (/opt/ros/jazzy/share/sensor_msgs/cmake)
+[0.843s] -- Found irobot_create_msgs: 3.0.0 (/opt/ros/jazzy/share/irobot_create_msgs/cmake)
+[0.861s] -- Found turtlebot4_msgs: 2.1.1 (/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/share/turtlebot4_msgs/cmake)
+[0.871s] -- Found ament_lint_auto: 0.17.3 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[0.942s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[0.942s] -- Configured cppcheck include dirs: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/src/turtlebot4_node/include
+[0.942s] -- Configured cppcheck exclude dirs and/or files: 
+[0.943s] -- Added test 'cpplint' to check C / C++ code against the Google style
+[0.943s] -- Configured cpplint exclude dirs and/or files: 
+[0.944s] -- Added test 'lint_cmake' to check CMake code style
+[0.945s] -- Added test 'uncrustify' to check C / C++ code style
+[0.945s] -- Configured uncrustify additional arguments: 
+[0.945s] -- Added test 'xmllint' to check XML markup files
+[0.947s] -- Configuring done (0.9s)
+[0.957s] -- Generating done (0.0s)
+[0.960s] -- Build files have been written to: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_node
+[0.967s] Invoked command in '/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_node' returned '0': AMENT_PREFIX_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy:/opt/ros/humble DEBUGINFOD_URLS=https://debuginfod.ubuntu.com LD_LIBRARY_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/src/turtlebot4_node -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node
+[0.967s] Invoking command in '/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_node': AMENT_PREFIX_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy:/opt/ros/humble DEBUGINFOD_URLS=https://debuginfod.ubuntu.com LD_LIBRARY_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake --build /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_node -- -j20 -l20
+[1.006s] [ 12%] [32mBuilding CXX object CMakeFiles/turtlebot4_node_lib.dir/src/turtlebot4.cpp.o[0m
+[1.006s] [ 25%] [32mBuilding CXX object CMakeFiles/turtlebot4_node_lib.dir/src/buttons.cpp.o[0m
+[1.007s] [ 37%] [32mBuilding CXX object CMakeFiles/turtlebot4_node_lib.dir/src/main.cpp.o[0m
+[1.007s] [ 50%] [32mBuilding CXX object CMakeFiles/turtlebot4_node_lib.dir/src/display.cpp.o[0m
+[1.009s] [ 62%] [32mBuilding CXX object CMakeFiles/turtlebot4_node_lib.dir/src/leds.cpp.o[0m
+[14.713s] [ 75%] [32m[1mLinking CXX static library libturtlebot4_node_lib.a[0m
+[15.405s] [ 75%] Built target turtlebot4_node_lib
+[15.422s] [ 87%] [32mBuilding CXX object CMakeFiles/turtlebot4_node.dir/src/main.cpp.o[0m
+[18.035s] [100%] [32m[1mLinking CXX executable turtlebot4_node[0m
+[18.808s] [100%] Built target turtlebot4_node
+[18.816s] Invoked command in '/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_node' returned '0': AMENT_PREFIX_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy:/opt/ros/humble DEBUGINFOD_URLS=https://debuginfod.ubuntu.com LD_LIBRARY_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake --build /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_node -- -j20 -l20
+[18.817s] Invoking command in '/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_node': AMENT_PREFIX_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy:/opt/ros/humble DEBUGINFOD_URLS=https://debuginfod.ubuntu.com LD_LIBRARY_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake --install /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_node
+[18.823s] -- Install configuration: ""
+[18.823s] -- Execute custom install script
+[18.823s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/lib/turtlebot4_node/turtlebot4_node
+[18.830s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/include/turtlebot4_node/action.hpp
+[18.836s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/include/turtlebot4_node/buttons.hpp
+[18.842s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/include/turtlebot4_node/display.hpp
+[18.848s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/include/turtlebot4_node/leds.hpp
+[18.855s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/include/turtlebot4_node/service.hpp
+[18.861s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/include/turtlebot4_node/turtlebot4.hpp
+[18.871s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/include/turtlebot4_node/utils.hpp
+[18.880s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/share/ament_index/resource_index/package_run_dependencies/turtlebot4_node
+[18.887s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/share/ament_index/resource_index/parent_prefix_path/turtlebot4_node
+[18.894s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/share/turtlebot4_node/environment/ament_prefix_path.sh
+[18.902s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/share/turtlebot4_node/environment/ament_prefix_path.dsv
+[18.911s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/share/turtlebot4_node/environment/path.sh
+[18.920s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/share/turtlebot4_node/environment/path.dsv
+[18.928s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/share/turtlebot4_node/local_setup.bash
+[18.937s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/share/turtlebot4_node/local_setup.sh
+[18.945s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/share/turtlebot4_node/local_setup.zsh
+[18.956s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/share/turtlebot4_node/local_setup.dsv
+[18.964s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/share/turtlebot4_node/package.dsv
+[18.973s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/share/ament_index/resource_index/packages/turtlebot4_node
+[18.981s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/share/turtlebot4_node/cmake/ament_cmake_export_include_directories-extras.cmake
+[18.991s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/share/turtlebot4_node/cmake/turtlebot4_nodeConfig.cmake
+[18.999s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/share/turtlebot4_node/cmake/turtlebot4_nodeConfig-version.cmake
+[19.004s] -- Symlinking: /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_node/share/turtlebot4_node/package.xml
+[19.011s] Invoked command in '/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_node' returned '0': AMENT_PREFIX_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy:/opt/ros/humble DEBUGINFOD_URLS=https://debuginfod.ubuntu.com LD_LIBRARY_PATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/install/turtlebot4_msgs/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/cmake --install /home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_node

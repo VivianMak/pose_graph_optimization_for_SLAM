@@ -1,0 +1,117 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-930beb378c2520d4c1e2.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10.2"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						3,
+						4
+					]
+				},
+				{
+					"build" : "Turtlebot4Hmi",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-Turtlebot4Hmi-bcbfb86b46e3fa8bd2cd.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10.2"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "Turtlebot4Hmi",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1
+					],
+					"name" : "turtlebot4_gz_gui_plugins",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 1,
+					"id" : "Turtlebot4Hmi::@7ab402902ed6000adbb3",
+					"jsonFile" : "target-Turtlebot4Hmi-48b98776197402749b61.json",
+					"name" : "Turtlebot4Hmi",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "Turtlebot4Hmi_autogen::@7ab402902ed6000adbb3",
+					"jsonFile" : "target-Turtlebot4Hmi_autogen-9dba0ef77792b83bb157.json",
+					"name" : "Turtlebot4Hmi_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "Turtlebot4Hmi_autogen_timestamp_deps::@7ab402902ed6000adbb3",
+					"jsonFile" : "target-Turtlebot4Hmi_autogen_timestamp_deps-618be209bf0c0b36b269.json",
+					"name" : "Turtlebot4Hmi_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "turtlebot4_gz_gui_plugins_uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-turtlebot4_gz_gui_plugins_uninstall-503257f0c052a81e542e.json",
+					"name" : "turtlebot4_gz_gui_plugins_uninstall",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-uninstall-285d57b3017659e80c9e.json",
+					"name" : "uninstall",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/build/turtlebot4_gz_gui_plugins",
+		"source" : "/home/mampane/Desktop/pose_graph_optimization_for_SLAM/ros2_ws/src/turtlebot4_gz_gui_plugins"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}
