@@ -1,13 +1,20 @@
 #include <vector>
 #include <iostream>
 #include <array>
+#include <string>
 
 // Define a type alias for a 3x3 matrix of doubles for convenience
 using Matrix3x3 = std::array<std::array<double, 3>, 3>;
 
+struct Pose {
+    double x;
+    double y;
+    double theta;
+};
+
 class Node {
 public:
-    // Pose data
+    // Pose
     float x;
     float y;
     float theta;
