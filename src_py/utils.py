@@ -10,7 +10,7 @@ class Pose:
 @dataclass
 class Node:
     node_id: int
-    pose: Pose
+    pose: Pose      # uncertain
     scans: list     # laser scans will be in a list
 
 
@@ -23,6 +23,6 @@ class Node:
     
 @dataclass
 class Edge:
-    transform = [] # turn into np array
+    transform = [] # turn into np array, uncertain
     parent_id = int
     child_id = int

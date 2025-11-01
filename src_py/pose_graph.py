@@ -18,7 +18,7 @@ class PoseGraph:
         """Return current state of pose graph for visuals"""
         return self.node_list, self.edge_list
     
-    def check_scans(self):
+    def check_loop_closure(self):
         """Check if a scan is aligned with some previous,
         if so, create edge"""
         pass
