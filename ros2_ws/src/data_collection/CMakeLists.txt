@@ -33,12 +33,18 @@ set(DEPENDENCIES
 "sensor_msgs"
 )
 
-set(EXECUTABLE_NAME "collect_data")
+set(COLLECT_EXECUTABLE "collect_data")
+set(READ_EXECUTABLE "read_data")
 
-add_executable(${EXECUTABLE_NAME} src/data_collection_node.cpp)
-ament_target_dependencies(${EXECUTABLE_NAME} ${DEPENDENCIES})
+add_executable(${COLLECT_EXECUTABLE} src/data_collection_node.cpp)
+ament_target_dependencies(${COLLECT_EXECUTABLE} ${DEPENDENCIES})
 
-install(TARGETS ${EXECUTABLE_NAME}
+add_executable(${READ_EXECUTABLE} src/read_data.cpp)
+ament_target_dependencies(${READ_EXECUTABLE} ${DEPENDENCIES})
+
+install(TARGETS 
+  ${COLLECT_EXECUTABLE}
+  ${READ_EXECUTABLE}
   DESTINATION lib/${PROJECT_NAME}
 )
 

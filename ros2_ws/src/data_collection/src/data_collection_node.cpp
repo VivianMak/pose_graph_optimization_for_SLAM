@@ -1,18 +1,13 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
-#include <cstdint>
-#include <vector>
-#include <nlohmann/json.hpp>
 #include <fstream>
-
 
 struct SavedLaserScan 
 {
     std::vector<float> ranges;  // ranges
+    int32_t sec;   // header.stamp.sec
     uint32_t nanosec;   // header.stamp.nanosec
 };
-
-std::vector<SavedLaserScan> scans;
 
 class DataCollectionNode : public rclcpp::Node
 {
@@ -24,44 +19,47 @@ public:
             10, 
             std::bind(&DataCollectionNode::lidar_callback, this, std::placeholders::_1));
     }
+    void saveToBinary(const std::string &filename)
+    {
+        std::ofstream file(filename, std::ios::binary);
+        if (!file) {
+            RCLCPP_ERROR(this->get_logger(), "Failed to open %s", filename.c_str());
+            return;
+        }
+
+        // Save LiDAR
+        uint64_t scanCount = scans_.size();
+        file.write((char*)&scanCount, sizeof(scanCount));
+        for (auto &scan : scans_) {
+            uint64_t n = scan.ranges.size();
+            file.write((char*)&n, sizeof(n));
+            file.write((char*)scan.ranges.data(), n * sizeof(float));
+            file.write((char*)&scan.sec, sizeof(int32_t));
+            file.write((char*)&scan.nanosec, sizeof(uint32_t));
+        }
+
+        file.close();
+        RCLCPP_INFO(this->get_logger(), "Saved %zu scans to %s", scans_.size(), filename.c_str());
+    }
 
 private:
     void lidar_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg)
         {
-            // std::stringstream ss;
-            // for (float r : msg->ranges) {
-            //     ss << r << " ";
-            // }
-            // RCLCPP_INFO(this->get_logger(), "Laser ranges: %s", ss.str().c_str());
-            scans.push_back({msg->ranges, msg->header.stamp.nanosec});
+            scans_.push_back({msg->ranges, msg->header.stamp.sec, msg->header.stamp.nanosec});
+            RCLCPP_INFO(this->get_logger(), "Sec: %i Nanosec: %u", scans_.back().sec, scans_.back().nanosec);
         }
 
         rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr subscription_;
+        std::vector<SavedLaserScan> scans_;
 };
-
-void saveToJson(const std::string &filename) {
-    nlohmann::json j;
-
-    // Save scans
-    for (auto &scan : scans) {
-        j["scans"].push_back({
-            {"ranges", scan.ranges},
-            {"nanosec", scan.nanosec}
-        });
-    }
-
-    std::ofstream file(filename);
-    file << j.dump(2);   // pretty print with 2-space indent
-    file.close();
-
-    std::cout << "Data saved to " << filename << std::endl;
-}
 
 int main(int argc, char * argv[])
 {
-  rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<DataCollectionNode>());
-  rclcpp::shutdown();
-  saveToJson("lidar_data.json");
+   rclcpp::init(argc, argv);
+    auto node = std::make_shared<DataCollectionNode>();
+    rclcpp::spin(node);
+
+    rclcpp::shutdown();
+    node->saveToBinary("lidar_data2.bin");
   return 0;
 }
