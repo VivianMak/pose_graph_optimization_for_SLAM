@@ -1,4 +1,7 @@
+import numpy as np
+
 from dataclasses import dataclass
+from helper import wrap
 
 @dataclass(frozen=True)
 class Pose:
@@ -6,12 +9,18 @@ class Pose:
     y: float
     theta: float
 
+    def __sub__(self, old):
+        return Pose(
+            x = self.x - old.x,
+            y = self.y - old.y,
+            theta = wrap(self.theta - old.theta),
+        )
 
 @dataclass
 class Node:
     node_id: int
     pose: Pose      # uncertain
-    scans: list     # laser scans will be in a list
+    scans: None     # laser scans will be in a list
 
 
     def to_dict(self):
@@ -23,6 +32,8 @@ class Node:
     
 @dataclass
 class Edge:
-    transform = [] # turn into np array, uncertain
-    parent_id = int
-    child_id = int
+    parent_id: int
+    child_id: int
+    transform: np.ndarray   # 3x3 homogenous tranform matrix
+    info: np.ndarray        # 3x3 information matrix (inverse covariance)
+

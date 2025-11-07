@@ -6,13 +6,13 @@ class PoseGraph:
         self.node_list = []
         self.edge_list = []
 
-    def create_node(self, id, pose, scans):
+    def add_node(self, node: Node):
         """Check time and create node"""
-        self.node_list.append(Node(id, pose, scans))
+        self.node_list.append(node)
 
-    def create_edge(self, mat, parent_id, child_id):
+    def add_edge(self, edge: Edge):
         """Create an edge between nodes"""
-        self.edge_list.append(Edge(mat, parent_id, child_id))
+        self.edge_list.append(edge)
 
     def get_pose_graph(self):
         """Return current state of pose graph for visuals"""
