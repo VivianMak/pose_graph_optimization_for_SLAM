@@ -1,5 +1,9 @@
 #include <vector>
 #include <cstdint>
+#include <string>
+#include <fstream>
+#include <iostream>
+#include <memory>
 
 struct SavedLaserScan 
 {
@@ -30,3 +34,5 @@ struct SavedOdom
     double angular_y;  // twist.twist.angular.y
     double angular_z;  // twist.twist.angular.z
 };
+
+void read_data(std::string filename, std::shared_ptr<std::vector<SavedLaserScan>> lidar_vector, std::shared_ptr<std::vector<SavedOdom>> odom_vector);

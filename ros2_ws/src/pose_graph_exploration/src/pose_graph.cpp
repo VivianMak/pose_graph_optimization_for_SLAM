@@ -1,7 +1,7 @@
-#include <iostream>
-#include "pose_graph_structs.h"
+#include "pose_graph_header.h"
 
 int main() {
-    SavedLaserScan temp = {{0.1, 0.2, 0.3}, 2, 30000};
-    std::cout << temp.ranges[0] << "\n";
+    std::shared_ptr<std::vector<SavedLaserScan>>  scans = std::make_shared<std::vector<SavedLaserScan>>();;
+    std::shared_ptr<std::vector<SavedOdom>> odoms = std::make_shared<std::vector<SavedOdom>>();;
+    read_data("robot_data.bin", scans, odoms);
 }

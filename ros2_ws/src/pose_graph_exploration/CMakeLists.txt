@@ -24,7 +24,7 @@ include_directories(
 
 set(POSE_GRAPH_EXECUTABLE "pose_graph")
 
-add_executable(${POSE_GRAPH_EXECUTABLE} src/pose_graph.cpp)
+add_executable(${POSE_GRAPH_EXECUTABLE} src/pose_graph.cpp include/pose_graph_header.cpp)
 
 install(TARGETS
     ${POSE_GRAPH_EXECUTABLE}
