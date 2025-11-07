@@ -35,5 +35,5 @@ class Edge:
     parent_id: int
     child_id: int
     transform: np.ndarray   # 3x3 homogenous tranform matrix
-    info: np.ndarray        # 3x3 information matrix (inverse covariance)
+    # info: np.ndarray        # 3x3 information matrix (inverse covariance)
 
