@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>pose_graph_exploration</name>
+  <version>0.0.0</version>
+  <description>Package for exploring making and manipulating a pose graph</description>
+
+  <license>Apache 2.0</license>
+
+  <maintainer email="mampane@olin.edu">Mo Ampane</maintainer>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
