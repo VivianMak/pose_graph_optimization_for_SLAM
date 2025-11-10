@@ -4,4 +4,6 @@ int main() {
     std::shared_ptr<std::vector<SavedLaserScan>>  scans = std::make_shared<std::vector<SavedLaserScan>>();;
     std::shared_ptr<std::vector<SavedOdom>> odoms = std::make_shared<std::vector<SavedOdom>>();;
     read_data("robot_data.bin", scans, odoms);
+    std::cout << (*scans)[0].ranges[0] << "\n";
+    std::cout << (*scans)[0].sec << "\n";
 }
