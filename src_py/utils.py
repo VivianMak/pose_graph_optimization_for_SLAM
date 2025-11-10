@@ -4,12 +4,21 @@ from dataclasses import dataclass
 from helper import wrap
 
 @dataclass(frozen=True)
+class Point:
+    x: float
+    y: float
+    index: float
+    r: float
+
+@dataclass(frozen=True)
 class Pose:
     x: float
     y: float
     theta: float
 
-    def __sub__(self, old):
+    def __sub__(self, old: "Pose"):
+        if not isinstance(old, Pose):
+            return NotImplemented
         return Pose(
             x = self.x - old.x,
             y = self.y - old.y,
