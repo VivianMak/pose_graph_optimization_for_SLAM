@@ -51,3 +51,5 @@ install_manifest.txt
 
 # --- Compiler cache (optional) ---
 ccache/
+ros2_ws/.vscode
+venv/
