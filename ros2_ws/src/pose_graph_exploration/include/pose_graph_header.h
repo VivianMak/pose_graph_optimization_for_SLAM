@@ -36,6 +36,16 @@ struct SavedOdom
     double angular_z;  // twist.twist.angular.z
 };
 
+struct Pose {
+    double x;
+    double y;
+    double theta;
+
+    Pose() : x(0), y(0), theta(0) {}
+    Pose(double x_, double y_, double theta_)
+        : x(x_), y(y_), theta(theta_) {}
+};
+
 class Node {
 public:
     // Pose data
