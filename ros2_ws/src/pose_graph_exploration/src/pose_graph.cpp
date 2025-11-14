@@ -5,15 +5,46 @@ int main() {
     std::shared_ptr<std::vector<SavedOdom>> odoms = std::make_shared<std::vector<SavedOdom>>();;
     read_data("robot_data.bin", scans, odoms);
 
+    // Setup rng
+    // Seed the random number generator using the current time
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator(seed);
+
+    // Define the mean and standard deviation for the normal distribution
+    double mean = 0.0;
+    double stddev = 0.01;
+
+    // Create a normal distribution object
+    std::normal_distribution<double> distribution(mean, stddev);
+
+    std::vector<Pose> odom_poses;
+    std::vector<Pose> noisy_poses;
+
+    double x_noise = 0.0;
+    double y_noise = 0.0;
+
+    // Odom vector to Poses vector and noisy Poses vector
+    for (const SavedOdom &odom : *odoms) {
+        double x_random_value = distribution(generator);
+        double y_random_value = distribution(generator);
+
+        x_noise += x_random_value;
+        y_noise += y_random_value;
+
+        double theta = quaternion2euler(odom.orientation_x, odom.orientation_y, odom.orientation_z, odom.orientation_w)[2];
+        odom_poses.push_back(Pose{odom.position_x, odom.position_y, theta});
+        noisy_poses.push_back(Pose{odom.position_x + x_noise, odom.position_y + y_noise, theta});
+    }
+
+    // Print Poses
     size_t idx = 0;
-    
-    while (idx < (*scans).size()) {
-        SavedOdom curr_odom = (*odoms)[idx];
-        std::cout << "------- Pose -------" << "\n";
-        std::cout << "position: " << curr_odom.position_x << ", " << curr_odom.position_y << ", " << curr_odom.position_z << "\n";  // z is always 0
-        double theta = quaternion2euler(curr_odom.orientation_x, curr_odom.orientation_y, curr_odom.orientation_z, curr_odom.orientation_w)[2]; // roll and pitch are both 0
-        std::cout << "theta: " << theta << "\n";
-        std::cout << "homogeneous matrix\n" << pose2homogeneous(curr_odom.position_x, curr_odom.position_y, theta) << "\n";
+
+    while (idx < odom_poses.size()) {
+        Pose pose = odom_poses[idx];
+        Pose noisy_pose = noisy_poses[idx];
+
+        std::cout << "Pose: x = " << pose.x << ", y = " << pose.y << ", theta = " << pose.theta << "\n";
+        std::cout << "Noisy pose: x = " << noisy_pose.x << ", y = " << noisy_pose.y << ", theta = " << noisy_pose.theta << "\n";
         idx+=100;
     }
 }

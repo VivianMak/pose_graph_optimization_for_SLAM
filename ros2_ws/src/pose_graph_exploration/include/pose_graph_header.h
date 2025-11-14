@@ -5,6 +5,8 @@
 #include <iostream>
 #include <memory>
 #include <Eigen/Dense>
+#include <random>
+#include <chrono>
 
 struct SavedLaserScan 
 {
