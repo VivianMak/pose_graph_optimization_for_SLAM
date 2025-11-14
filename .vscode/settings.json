@@ -75,6 +75,13 @@
         "any": "cpp",
         "codecvt": "cpp",
         "ranges": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "strstream": "cpp",
+        "shared_mutex": "cpp",
+        "cfenv": "cpp",
+        "__nullptr": "cpp",
+        "__split_buffer": "cpp",
+        "__functional_base": "cpp",
+        "locale": "cpp"
     }
 }
