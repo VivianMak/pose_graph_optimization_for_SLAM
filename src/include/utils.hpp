@@ -71,15 +71,15 @@ struct Edge {
 struct Node {
     int node_id;
     Pose pose;                       // pose of node
-    std::vector<std::unique_ptr<Edge>> edges; // smart pointer for edges
+    std::vector<std::unique_ptr<utils::Edge>> edges; // smart pointer for edges
 
     Node(int id, const Pose& p)
         : node_id(id), pose(p) {}
 
     // add a new edge if closure
     void addEdge(Node* child, const Eigen::Matrix3d& T) {
-        // nodeA->addEdge(nodeB, transform_AB);
-        edges.push_back(new Edge(child, T)); // add edge to end of vector
+        // nodeA->addEdge(nodeB, transform_AB)
+        edges.push_back(std::make_unique<utils::Edge>(child, T)); // add edge smart pointer to end of vector
     }
 };
 
