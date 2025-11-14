@@ -17,6 +17,11 @@ endif()
 
 # Find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(Eigen3 REQUIRED)
+
+set(DEPENDENCIES
+"Eigen3"
+)
 
 include_directories(
     include
@@ -25,6 +30,8 @@ include_directories(
 set(POSE_GRAPH_EXECUTABLE "pose_graph")
 
 add_executable(${POSE_GRAPH_EXECUTABLE} src/pose_graph.cpp include/pose_graph_header.cpp)
+target_link_libraries(${POSE_GRAPH_EXECUTABLE} PUBLIC Eigen3::Eigen)
+ament_target_dependencies(${POSE_GRAPH_EXECUTABLE} ${DEPENDENCIES})
 
 install(TARGETS
     ${POSE_GRAPH_EXECUTABLE}

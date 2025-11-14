@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include <Eigen/Dense>
 
 struct SavedLaserScan 
 {
@@ -36,3 +37,5 @@ struct SavedOdom
 };
 
 void read_data(std::string filename, std::shared_ptr<std::vector<SavedLaserScan>> lidar_vector, std::shared_ptr<std::vector<SavedOdom>> odom_vector);
+std::vector<double> quaternion2euler(double x, double y, double z, double w);
+Eigen::Matrix4d pose2homogeneous(double x, double y, double z);
