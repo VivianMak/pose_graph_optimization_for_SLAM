@@ -12,7 +12,7 @@ int main() {
 
     // Define the mean and standard deviation for the normal distribution
     double mean = 0.0;
-    double stddev = 0.01;
+    double stddev = 0.001;
 
     // Create a normal distribution object
     std::normal_distribution<double> distribution(mean, stddev);
