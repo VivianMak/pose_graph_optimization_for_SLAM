@@ -50,6 +50,20 @@ int main() {
     }
     noisy_file.close();
 
+    std::ofstream scan_file("lidar_scans.csv");
+
+    for (const auto& scan : *scans) {
+        // Write 360 ranges separated by commas
+        for (size_t i = 0; i < scan.ranges.size(); i++) {
+            scan_file << scan.ranges[i];
+            if (i < scan.ranges.size() - 1)
+                scan_file << ",";
+        }
+        scan_file << "\n";
+    }
+
+    scan_file.close();
+
     // Print Poses
     // size_t idx = 0;
 
