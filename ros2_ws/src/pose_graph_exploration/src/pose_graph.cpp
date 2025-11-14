@@ -12,7 +12,7 @@ int main() {
 
     // Define the mean and standard deviation for the normal distribution
     double mean = 0.0;
-    double stddev = 0.01;
+    double stddev = 0.001;
 
     // Create a normal distribution object
     std::normal_distribution<double> distribution(mean, stddev);
@@ -49,6 +49,20 @@ int main() {
         noisy_file << p.x << "," << p.y << "," << p.theta << "\n";
     }
     noisy_file.close();
+
+    std::ofstream scan_file("lidar_scans.csv");
+
+    for (const auto& scan : *scans) {
+        // Write 360 ranges separated by commas
+        for (size_t i = 0; i < scan.ranges.size(); i++) {
+            scan_file << scan.ranges[i];
+            if (i < scan.ranges.size() - 1)
+                scan_file << ",";
+        }
+        scan_file << "\n";
+    }
+
+    scan_file.close();
 
     // Print Poses
     // size_t idx = 0;
