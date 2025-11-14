@@ -36,15 +36,29 @@ int main() {
         noisy_poses.push_back(Pose{odom.position_x + x_noise, odom.position_y + y_noise, theta});
     }
 
-    // Print Poses
-    size_t idx = 0;
-
-    while (idx < odom_poses.size()) {
-        Pose pose = odom_poses[idx];
-        Pose noisy_pose = noisy_poses[idx];
-
-        std::cout << "Pose: x = " << pose.x << ", y = " << pose.y << ", theta = " << pose.theta << "\n";
-        std::cout << "Noisy pose: x = " << noisy_pose.x << ", y = " << noisy_pose.y << ", theta = " << noisy_pose.theta << "\n";
-        idx+=100;
+    std::ofstream odom_file("odom_data.csv");
+    odom_file << "x,y,theta\n";
+    for (const auto& p : odom_poses) {
+        odom_file << p.x << "," << p.y << "," << p.theta << "\n";
     }
+    odom_file.close();
+
+    std::ofstream noisy_file("noisy_odom_data.csv");
+    noisy_file << "x,y,theta\n";
+    for (const auto& p : noisy_poses) {
+        noisy_file << p.x << "," << p.y << "," << p.theta << "\n";
+    }
+    noisy_file.close();
+
+    // Print Poses
+    // size_t idx = 0;
+
+    // while (idx < odom_poses.size()) {
+    //     Pose pose = odom_poses[idx];
+    //     Pose noisy_pose = noisy_poses[idx];
+
+    //     std::cout << "Pose: x = " << pose.x << ", y = " << pose.y << ", theta = " << pose.theta << "\n";
+    //     std::cout << "Noisy pose: x = " << noisy_pose.x << ", y = " << noisy_pose.y << ", theta = " << noisy_pose.theta << "\n";
+    //     idx+=100;
+    // }
 }
