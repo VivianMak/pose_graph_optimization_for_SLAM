@@ -2,5 +2,54 @@
 ros2_ws/build
 ros2_ws/install
 ros2_ws/log
+
+# --- Build directories ---
+build/
+build*/        # build, build-debug, build-release, etc.
+cmake-build*/  # CLion / JetBrains
+
+# --- CMake generated files ---
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+install_manifest.txt
+
+# --- Executables / Binaries ---
+*.o
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+
+# --- IDE / Editor files ---
+# VSCode
+.vscode/
+# CLion / JetBrains
+.idea/
+# MacOS finder files
+.DS_Store
+# Linux/Emacs swap files
+*~
+*.swp
+*.swo
+
+# --- Logs, dumps ---
+*.log
+*.tmp
+
+# --- Generated test or data artifacts ---
+*.pcd
+*.ply
+*.png
+*.jpg
+*.npy
+*.bin
+
+# --- Compiler cache (optional) ---
+ccache/
 ros2_ws/.vscode
 venv/
