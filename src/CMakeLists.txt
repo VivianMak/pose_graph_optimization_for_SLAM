@@ -12,5 +12,11 @@ include_directories(
         /usr/include/eigen3
 )
 
-add_executable(test_structs src/test_structs.cpp)
-add_executable(read_data src/read_data.cpp)
+add_executable(main
+    src/main.cpp
+    src/read_data.cpp
+    src/test_structs.cpp
+)
+
+# add_executable(test_structs src/test_structs.cpp)
+# add_executable(read_data src/read_data.cpp)

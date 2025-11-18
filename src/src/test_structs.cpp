@@ -5,6 +5,7 @@
 #include <Eigen/Dense>
 
 #include "utils.hpp"
+#include "test_structs.hpp"
 
 
 Eigen::Matrix3d makeTransform(const utils::Pose& delta) {
@@ -20,7 +21,7 @@ Eigen::Matrix3d makeTransform(const utils::Pose& delta) {
     return T;
 }
 
-int main() {
+void testStructs() {
     /*
     * Testing initalizations of structs
     */
@@ -90,6 +91,4 @@ int main() {
     // std::vector<std::unique_ptr<Pose>> pose_ptrs;
     // pose_ptrs.push_back(std::make_unique<Pose>(0.0, 0.0, 0.0));
     // pose_ptrs.push_back(std::make_unique<Pose>(1.0, 2.0, 0.5));
-
-    return 0;
 }

@@ -3,45 +3,31 @@
 #include <vector>
 #include <cstdint>
 
-struct SavedLaserScan 
+#include "read_data.hpp"
+
+// Initialize the vector pair 
+// allows us to return both variables with synced up time
+std::pair<std::vector<SavedLaserScan>, std::vector<SavedOdom>>
+
+loadData(const std::string& FILENAME)
 {
-    std::vector<float> ranges;  // ranges
-    int32_t sec;   // header.stamp.sec
-    uint32_t nanosec;   // header.stamp.nanosec
-};
-
-struct SavedOdom
-{
-    int32_t sec;   // header.stamp.sec
-    uint32_t nanosec;   // header.stamp.nanosec
-
-    double position_x;  // pose.pose.position.x
-    double position_y;  // pose.pose.position.y
-    double position_z;  // pose.pose.position.z
-
-    double orientation_x; // pose.pose.orientation.x
-    double orientation_y; // pose.pose.orientation.y
-    double orientation_z; // pose.pose.orientation.z
-    double orientation_w; // pose.pose.orientation.w
-
-    double linear_x;  // twist.twist.linear.x
-    double linear_y;  // twist.twist.linear.y
-    double linear_z;  // twist.twist.linear.z
-
-    double angular_x;  // twist.twist.angular.x
-    double angular_y;  // twist.twist.angular.y
-    double angular_z;  // twist.twist.angular.z
-};
-
-int main() {
-    std::ifstream file("../../data/robot_data.bin", std::ios::binary);
-    if (!file) {
-        std::cerr << "Error: Could not open file robot_data.bin\n";
-        return 1;
-    }
+    /*
+    * Load a binary data file taken from ROS2 sim.
+    *
+    * @param FILENAME (string)- the .bin data file
+    * @return {odoms, scans} (vector tuple)- wheel odometry and laser scan at a timestep
+    */
 
     std::vector<SavedLaserScan> scans;
     std::vector<SavedOdom> odoms;
+
+
+    std::ifstream file(FILENAME, std::ios::binary);
+    if (!file) {
+        std::cerr << "Error: Could not open file robot_data.bin\n";
+        return {scans, odoms}; // empty
+    }
+   
 
     // --- Load Laser Scans ---
     uint64_t scanCount;
@@ -88,8 +74,9 @@ int main() {
 
     file.close();
 
+    // Verify the vectors
     std::cout << "Loaded " << scans.size() << " lidar scans\n";
     std::cout << "Loaded " << odoms.size() << " odom points\n";
 
-    return 0;
+    return {scans, odoms};
 }
