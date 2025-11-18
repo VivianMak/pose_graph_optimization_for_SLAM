@@ -1,24 +1,39 @@
 #pragma once
-#include <iostream>
-#include <vector>
 
+#include <vector>
+#include <memory>
 #include "utils.hpp"
 
-namespace pose_graph
+namespace pose_graph {
 
-class PoseGraph{
-    public:
-    std::vector node_list;
-    utils::Pose threshold(0.5, 0.5, 30);
+// -------------------------
+// PoseGraph outline
+// -------------------------
+class PoseGraph {
+public:
+    PoseGraph();
 
-    // First node
-    utils::Node check_node;
-    bool closed_loop(false);
+    utils::Node* addNode(int node_id, const utils::Pose& pose);
+    void checkLoopClosure(utils::Node* node);
 
-    void push_node(utils::Node);
+    bool isLoopClosed() const;
+    void resetLoopClosed();
 
-    void check_loop_closure(utils::Node);
+private:
+    // internal helpers
+    bool withinThreshold(const utils::Pose& delta) const;
 
-    bool is_closed_loop();
+    // graph data
+    std::vector<std::unique_ptr<utils::Node>> nodes_;
+    std::vector<utils::Edge*> edges_;
+
+    // loop closure parameters
+    double threshold_x_;
+    double threshold_y_;
+    double threshold_theta_rad_;
+
+    utils::Node* check_node_;   // reference node for loop closure
+    bool closed_loop_;          // tracks loop-closure state
+};
 
 }

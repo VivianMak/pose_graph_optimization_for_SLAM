@@ -1,6 +1,7 @@
 #include <iostream>
 #include "read_data.hpp"
 #include "test_structs.hpp"
+#include "pose_graph.hpp"
 
 int main() {
     std::cout << "Reading binary robot data...\n";

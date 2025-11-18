@@ -16,6 +16,7 @@ add_executable(main
     src/main.cpp
     src/read_data.cpp
     src/test_structs.cpp
+    src/pose_graph.cpp
 )
 
 # add_executable(test_structs src/test_structs.cpp)
