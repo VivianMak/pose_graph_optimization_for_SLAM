@@ -45,11 +45,6 @@ def rot2_hom(theta_deg):
         [0,  0, 1]
     ])
 
-def distance(p1, p2):
-    x1, y1 = p1
-    x2, y2 = p2
-    return math.sqrt((x2-x1)**2 + (y2-y1)**2)
-
 def make_correspondences(src_points, dst_points):
     # Build KD-tree for fast NN search
     tree = KDTree(dst_points)
@@ -60,3 +55,41 @@ def make_correspondences(src_points, dst_points):
     # (i, j) pairs
     correspondences = [(i, indices[i,0]) for i in range(len(src_points))]
     return correspondences
+
+def svd_rigid_transform(src, dst):
+    # Step 1: centroids
+    src_centroid = np.mean(src, axis=0)
+    dst_centroid = np.mean(dst, axis=0)
+
+    # Step 2: center
+    src_centered = src - src_centroid
+    dst_centered = dst - dst_centroid
+
+    # Step 3: cross-covariance
+    H = src_centered.T @ dst_centered
+
+    # Step 4: SVD
+    U, S, Vt = np.linalg.svd(H)
+
+    # Step 5: rotation
+    R = Vt.T @ U.T
+
+    # Step 5b: fix reflection
+    if np.linalg.det(R) < 0:
+        Vt[2, :] *= -1
+        R = Vt.T @ U.T
+
+    # Step 6: translation
+    t = dst_centroid - R @ src_centroid
+
+    return R, t
+
+def htm_2d(R, t):
+    """
+    Build a 3x3 homogeneous transformation matrix from a 2x2 rotation matrix R
+    and a 2-element translation vector t.
+    """
+    T = np.eye(3)
+    T[:2, :2] = R
+    T[:2, 2] = t
+    return T
