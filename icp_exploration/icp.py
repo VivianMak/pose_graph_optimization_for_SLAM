@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from helpers import transform_between_poses
+from helpers import transform_between_poses, make_correspondences
 
 # Load scan and odom data
 scan_data = np.loadtxt("lidar_scans.csv", delimiter=",")
@@ -53,6 +53,17 @@ htm_one_two = transform_between_poses(
 transformed_scan2 = htm_one_two @ scan2_array
 # print(transformed_scan2)
 
+src_points = np.vstack((transformed_scan2[0], transformed_scan2[1])).T
+dst_points = np.vstack((xs, ys)).T
+# print(dst_points)
+
+correspondences = make_correspondences(src_points, dst_points) # source points are the current lidar scans, destination is what we're comparing to
+# print(correspondences)
+
+corresponding_dst = np.vstack([dst_points[[pair[1]]] for pair in correspondences])
+
+print(corresponding_dst)
+
 plt.quiver(
     point_xs,
     point_ys, 
@@ -62,9 +73,16 @@ plt.quiver(
 plt.scatter(point_xs, point_ys, color='red')
 plt.axis("equal")
 plt.scatter(xs, ys, s=5, c='blue')  # s=point size
-plt.scatter(xs2, ys2, s=5, c='green')
+# plt.scatter(xs2, ys2, s=5, c='green')
 plt.scatter(transformed_scan2[0], transformed_scan2[1], s=5, c='red') 
 plt.plot(noisy_xs, noisy_ys)
+
+
+for (i, j) in correspondences:
+    plt.plot([src_points[i,0], dst_points[j,0]],
+             [src_points[i,1], dst_points[j,1]],
+             c='gray', linewidth=0.5)
+
 # plt.xlim([0.0, 3.0])
 # plt.ylim([-2.0, 1.0])
 plt.show()

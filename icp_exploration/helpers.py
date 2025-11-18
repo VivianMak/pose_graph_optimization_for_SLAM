@@ -1,4 +1,6 @@
 import numpy as np
+from sklearn.neighbors import KDTree
+import math
 
 def pose_to_transform(x, y, theta):
     """Convert (x, y, theta) into a 3×3 homogeneous transform."""
@@ -42,3 +44,19 @@ def rot2_hom(theta_deg):
         [s,  c, 0],
         [0,  0, 1]
     ])
+
+def distance(p1, p2):
+    x1, y1 = p1
+    x2, y2 = p2
+    return math.sqrt((x2-x1)**2 + (y2-y1)**2)
+
+def make_correspondences(src_points, dst_points):
+    # Build KD-tree for fast NN search
+    tree = KDTree(dst_points)
+
+    # Query nearest neighbors
+    dists, indices = tree.query(src_points, k=1)
+
+    # (i, j) pairs
+    correspondences = [(i, indices[i,0]) for i in range(len(src_points))]
+    return correspondences
