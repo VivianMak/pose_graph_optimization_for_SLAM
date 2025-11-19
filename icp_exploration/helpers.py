@@ -52,13 +52,19 @@ def make_correspondences(src_points, dst_points):
     # Query nearest neighbors
     dists, indices = tree.query(src_points, k=1)
 
-    # (i, j) pairs
+    # Make a list of lists containing corresponding indices
     correspondences = [(i, indices[i,0]) for i in range(len(src_points))]
-    return correspondences
+    return correspondences, dists
 
-def svd_rigid_transform(src, dst):
+def svd_rigid_transform(src, dst, dists):
+    trans_threshold = 1 # Threshold for removing scans that are clearly not visible in dst_points
+    trans_mask = (dists < trans_threshold).flatten()
+
+    # rot_thresh = 0.5
+    # rot_mask = (dists < rot_thresh).flatten()
+
     # Step 1: centroids
-    src_centroid = np.mean(src, axis=0)
+    src_centroid = np.mean(src[trans_mask], axis=0)
     dst_centroid = np.mean(dst, axis=0)
 
     # Step 2: center
@@ -66,6 +72,7 @@ def svd_rigid_transform(src, dst):
     dst_centered = dst - dst_centroid
 
     # Step 3: cross-covariance
+    # H = src_centered[rot_mask].T @ dst_centered[rot_mask]
     H = src_centered.T @ dst_centered
 
     # Step 4: SVD
@@ -76,7 +83,7 @@ def svd_rigid_transform(src, dst):
 
     # Step 5b: fix reflection
     if np.linalg.det(R) < 0:
-        Vt[2, :] *= -1
+        Vt[-1, :] *= -1
         R = Vt.T @ U.T
 
     # Step 6: translation
@@ -93,3 +100,16 @@ def htm_2d(R, t):
     T[:2, :2] = R
     T[:2, 2] = t
     return T
+
+def iterate_icp(src, dst):
+    corresponding_pts, dists = make_correspondences(src, dst)
+    corresponding_dst = np.vstack([dst[[pair[1]]] for pair in corresponding_pts])
+
+    rot, trans = svd_rigid_transform(src, corresponding_dst, dists)
+    src_to_dst_htm = htm_2d(rot, trans)
+
+    src = np.hstack([src, np.ones((src.shape[0], 1))]).T
+
+    transformed_src = src_to_dst_htm @ src  
+
+    return transformed_src[:2, :].T, src_to_dst_htm
