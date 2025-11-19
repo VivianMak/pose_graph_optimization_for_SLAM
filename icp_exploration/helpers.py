@@ -44,16 +44,68 @@ def rot2_hom(theta_deg):
         [0,  0, 1]
     ])
 
+def compute_normals(dst_points, num_neighbors):
+    tree = KDTree(dst_points[:2, :].T)  # 2D points only
+    normals = np.zeros((2, dst_points.shape[1]))
+    
+    for i in range(dst_points.shape[1]):
+        _, idxs = tree.query(dst_points[:2, i].reshape(1,-1), k=num_neighbors)
+        neighbors = dst_points[:2, idxs[0]].T  # shape (k,2)
+        cov = np.cov(neighbors.T)
+        _, vecs = np.linalg.eigh(cov)
+        normals[:, i] = vecs[:, 0]  # eigenvector of smallest eigenvalue
+    
+    # Flip normals to be consistent
+    if np.mean(normals[0,:]) < 0:
+        normals *= -1
+    
+    return normals
+
+
 def make_correspondences(src_points, dst_points):
     # Build KD-tree for fast NN search
-    tree = KDTree(dst_points.T)
+    tree = KDTree(dst_points[:2, :].T)
 
     # Query nearest neighbors
-    dists, indices = tree.query(src_points.T, k=1)
+    dists, indices = tree.query(src_points[:2, :].T, k=1)
 
     # Make a list of lists containing corresponding indices
     correspondences = [(i, indices[i,0]) for i in range(len(src_points[0]))]
     return correspondences, dists
+
+def least_squares_transform(src, dst, normals, dists, threshold, sigma):
+    # Point to plane optimization
+    mask = (dists < threshold).flatten()
+    src = src[:2, mask].T
+    dst = dst[:2, mask].T
+    normals = normals[:, mask].T
+
+    A = np.zeros((len(src), 3)) # Transformation to move src_point along normal
+    b = np.zeros(len(src))  # How far p is from the tangent along the normal
+    weights = np.zeros(len(src))
+
+    for i in range(len(src)):
+        src_point = src[i]
+        dst_point = dst[i]
+        normal_vector = normals[i]
+        error = normal_vector @ (src_point - dst_point)        # point-to-plane, @ is a dot product with two vectors 
+        weights[i] = np.exp(-(error**2) / (2*sigma**2))  # Gaussian weighting
+        A[i] = [-src_point[1]*normal_vector[0] + src_point[0]*normal_vector[1], normal_vector[0], normal_vector[1]]
+        b[i] = normal_vector @ (dst_point - src_point)
+
+    # Apply weights
+    W_sqrt = np.sqrt(weights)
+    A_weighted = A * W_sqrt[:, np.newaxis]
+    b_weighted = b * W_sqrt
+
+    # Solve weighted least squares
+    x, _, _, _ = np.linalg.lstsq(A_weighted, b_weighted, rcond=None)
+    theta, tx, ty = x
+    R = np.array([[np.cos(theta), -np.sin(theta)],
+                  [np.sin(theta),  np.cos(theta)]])
+    t = np.array([tx, ty])
+    return htm_2d(R, t)
+
 
 def svd_rigid_transform(src, dst, dists):
     trans_threshold = 0.5 # Threshold for removing scans that are clearly not visible in dst_points
@@ -95,22 +147,31 @@ def htm_2d(R, t):
     and a 2-element translation vector t.
     """
     T = np.eye(3)
-    T[:2, :2] = R[:2, :2]
-    T[:2, 2] = t[:2]
+    T[:2, :2] = R
+    T[:2, 2] = t
     return T
 
-def iterate_icp(src, dst):
+def iterate_icp(src, dst, normals):
     corresponding_pts, dists = make_correspondences(src, dst)
     corresponding_dst = np.hstack([dst[:, pair[1]].reshape(3, 1) for pair in corresponding_pts])
+    corresponding_norms = normals[:, [pair[1] for pair in corresponding_pts]]
 
-    rot, trans = svd_rigid_transform(src, corresponding_dst, dists)
-    src_to_dst_htm = htm_2d(rot, trans)
+    error_threshold = 1
+    error_weighting = 0.5
 
-    transformed_src = src_to_dst_htm @ src  
+    src_to_dst_htm = least_squares_transform(
+        src,
+        corresponding_dst,
+        corresponding_norms,
+        dists,
+        error_threshold,
+        error_weighting
+    )
+    transformed_src = src_to_dst_htm @ src
 
     return transformed_src, src_to_dst_htm
 
-def icp(src, dst, num_iterations, odom_htm):
+def icp(src, dst, num_iterations, odom_htm, num_neighbors):
     """
     Parameters:
         src (np.array of size 3, N): x and y values of source lidar scans,
@@ -128,11 +189,12 @@ def icp(src, dst, num_iterations, odom_htm):
         was taken based on LiDAR.
     """
 
+    normals = compute_normals(dst, num_neighbors)
     src_to_dst = odom_htm
     src_points = odom_htm @ src # doesn't get returned
 
     for i in range(num_iterations):
-        src_points, iteration_htm = iterate_icp(src_points, dst)
+        src_points, iteration_htm = iterate_icp(src_points, dst, normals)
         src_to_dst = iteration_htm @ src_to_dst
 
     return src_to_dst

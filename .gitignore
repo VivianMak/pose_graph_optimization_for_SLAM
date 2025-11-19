@@ -50,6 +50,7 @@ install_manifest.txt
 *.bin
 
 # --- Compiler cache (optional) ---
+*.pyc
 ccache/
 ros2_ws/.vscode
 venv/

@@ -14,11 +14,11 @@ noisy_ys = noisy_data["y"].values
 noisy_thetas = noisy_data["theta"].values
 
 # Choose indices
-pose_id_one = 0
-pose_id_two = 2695
+# pose_id_one = 0
+# pose_id_two = 2695
 
-# pose_id_one = 500
-# pose_id_two = 620
+pose_id_one = 500
+pose_id_two = 800
 
 # Select chosen scans
 scan = scan_data[pose_id_one]   # first scan
@@ -59,7 +59,8 @@ dst_points = np.vstack((xs, ys, np.ones(len(xs)))) # size (3, 640)
 odom_transform_src = htm_one_two @ src_points
 
 num_iterations = 100
-src_to_dst = icp(src_points, dst_points, num_iterations, htm_one_two)
+num_neighbors = 10
+src_to_dst = icp(src_points, dst_points, num_iterations, htm_one_two, num_neighbors)
 
 transformed_src = src_to_dst @ src_points
 
