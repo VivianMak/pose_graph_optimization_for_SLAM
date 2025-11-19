@@ -20,5 +20,6 @@ class PoseGraph{
     void check_loop_closure(utils::Node);
 
     bool is_closed_loop();
+        // force an edge constraint btwn first node and last node
 
 }
