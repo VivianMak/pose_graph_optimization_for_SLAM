@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn.neighbors import KDTree
-import math
 
 def pose_to_transform(x, y, theta):
     """Convert (x, y, theta) into a 3×3 homogeneous transform."""
@@ -47,24 +46,24 @@ def rot2_hom(theta_deg):
 
 def make_correspondences(src_points, dst_points):
     # Build KD-tree for fast NN search
-    tree = KDTree(dst_points)
+    tree = KDTree(dst_points.T)
 
     # Query nearest neighbors
-    dists, indices = tree.query(src_points, k=1)
+    dists, indices = tree.query(src_points.T, k=1)
 
     # Make a list of lists containing corresponding indices
-    correspondences = [(i, indices[i,0]) for i in range(len(src_points))]
+    correspondences = [(i, indices[i,0]) for i in range(len(src_points[0]))]
     return correspondences, dists
 
 def svd_rigid_transform(src, dst, dists):
-    trans_threshold = 1 # Threshold for removing scans that are clearly not visible in dst_points
+    trans_threshold = 0.5 # Threshold for removing scans that are clearly not visible in dst_points
     trans_mask = (dists < trans_threshold).flatten()
 
-    # rot_thresh = 0.5
-    # rot_mask = (dists < rot_thresh).flatten()
+    src = src.T[trans_mask]
+    dst = dst.T[trans_mask]
 
     # Step 1: centroids
-    src_centroid = np.mean(src[trans_mask], axis=0)
+    src_centroid = np.mean(src, axis=0)
     dst_centroid = np.mean(dst, axis=0)
 
     # Step 2: center
@@ -72,7 +71,6 @@ def svd_rigid_transform(src, dst, dists):
     dst_centered = dst - dst_centroid
 
     # Step 3: cross-covariance
-    # H = src_centered[rot_mask].T @ dst_centered[rot_mask]
     H = src_centered.T @ dst_centered
 
     # Step 4: SVD
@@ -97,19 +95,44 @@ def htm_2d(R, t):
     and a 2-element translation vector t.
     """
     T = np.eye(3)
-    T[:2, :2] = R
-    T[:2, 2] = t
+    T[:2, :2] = R[:2, :2]
+    T[:2, 2] = t[:2]
     return T
 
 def iterate_icp(src, dst):
     corresponding_pts, dists = make_correspondences(src, dst)
-    corresponding_dst = np.vstack([dst[[pair[1]]] for pair in corresponding_pts])
+    corresponding_dst = np.hstack([dst[:, pair[1]].reshape(3, 1) for pair in corresponding_pts])
 
     rot, trans = svd_rigid_transform(src, corresponding_dst, dists)
     src_to_dst_htm = htm_2d(rot, trans)
 
-    src = np.hstack([src, np.ones((src.shape[0], 1))]).T
-
     transformed_src = src_to_dst_htm @ src  
 
-    return transformed_src[:2, :].T, src_to_dst_htm
+    return transformed_src, src_to_dst_htm
+
+def icp(src, dst, num_iterations, odom_htm):
+    """
+    Parameters:
+        src (np.array of size 3, N): x and y values of source lidar scans,
+        first row is xs, second row is ys, third row is ones, a column is the coord of a scan.
+        dst (np.array of size 3, N): x and y values of destination lidar scans,
+        first row is xs, second row is ys, third row is ones, a column is the coord of a scan.
+        iterations (int): number of icp iterations
+        odom_htm (np.array of size 3, 3): homogeneous transformation matrix from
+        pose where the source scan was taken to the pose that the destination scan
+        was taken based on odometry.
+
+    Return:
+        src_to_dst (np.array of size 3, 3): homogeneous transformation matrix from
+        pose where the source scan was taken to the pose that the destination scan
+        was taken based on LiDAR.
+    """
+
+    src_to_dst = odom_htm
+    src_points = odom_htm @ src # doesn't get returned
+
+    for i in range(num_iterations):
+        src_points, iteration_htm = iterate_icp(src_points, dst)
+        src_to_dst = iteration_htm @ src_to_dst
+
+    return src_to_dst

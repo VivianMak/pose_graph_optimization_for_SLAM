@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from helpers import transform_between_poses, iterate_icp
+from helpers import transform_between_poses, icp
 
 # Load scan and odom data
 scan_data = np.loadtxt("lidar_scans.csv", delimiter=",")
@@ -16,6 +16,9 @@ noisy_thetas = noisy_data["theta"].values
 # Choose indices
 pose_id_one = 0
 pose_id_two = 2695
+
+# pose_id_one = 500
+# pose_id_two = 620
 
 # Select chosen scans
 scan = scan_data[pose_id_one]   # first scan
@@ -50,15 +53,15 @@ htm_one_two = transform_between_poses(
     [noisy_xs[pose_id_two], noisy_ys[pose_id_two], noisy_thetas[pose_id_two]]
 )
 
-transformed_scan2 = htm_one_two @ scan2_array
+src_points = np.vstack((scan2_array[0], scan2_array[1], scan2_array[2]))
+dst_points = np.vstack((xs, ys, np.ones(len(xs)))) # size (3, 640)
 
-src_points = np.vstack((transformed_scan2[0], transformed_scan2[1])).T
-dst_points = np.vstack((xs, ys)).T # size (640, 2)
+odom_transform_src = htm_one_two @ src_points
 
-num_iterations = 1000
+num_iterations = 100
+src_to_dst = icp(src_points, dst_points, num_iterations, htm_one_two)
 
-for i in range(num_iterations):
-    src_points, src_to_dst_htm = iterate_icp(src_points, dst_points)
+transformed_src = src_to_dst @ src_points
 
 plt.quiver(
     point_xs,
@@ -68,11 +71,9 @@ plt.quiver(
 )
 plt.scatter(point_xs, point_ys, color='red')
 plt.axis("equal")
-plt.scatter(xs, ys, s=5, c='blue')  # s=point size
-plt.scatter(transformed_scan2[0], transformed_scan2[1], s=5, c='red')
-plt.scatter(src_points[:, 0], src_points[:, 1], s=5, c='green') 
+plt.scatter(xs, ys, s=2, c='blue')  # s=point size
+plt.scatter(src_points[0, :], src_points[1, :], s=2, c='red')
+plt.scatter(odom_transform_src[0, :], odom_transform_src[1, :], s=2, c='orange')
+plt.scatter(transformed_src[0, :], transformed_src[1, :], s=2, c='green')
 plt.plot(noisy_xs, noisy_ys)
-
-# plt.xlim([0.0, 3.0])
-# plt.ylim([-2.0, 1.0])
 plt.show()
