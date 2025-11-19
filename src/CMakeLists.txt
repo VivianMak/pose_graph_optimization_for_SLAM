@@ -12,6 +12,7 @@ include_directories(
         /usr/include/eigen3
 )
 
+# Build executable
 add_executable(main
     src/main.cpp
     src/read_data.cpp
