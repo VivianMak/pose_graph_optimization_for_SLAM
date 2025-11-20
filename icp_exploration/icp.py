@@ -17,8 +17,8 @@ noisy_thetas = noisy_data["theta"].values
 # pose_id_one = 0
 # pose_id_two = 2695
 
-pose_id_one = 500
-pose_id_two = 800
+pose_id_one = 1100
+pose_id_two = 1200
 
 # Select chosen scans
 scan = scan_data[pose_id_one]   # first scan

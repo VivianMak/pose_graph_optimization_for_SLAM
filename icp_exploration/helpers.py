@@ -44,21 +44,32 @@ def rot2_hom(theta_deg):
         [0,  0, 1]
     ])
 
-def compute_normals(dst_points, num_neighbors):
-    tree = KDTree(dst_points[:2, :].T)  # 2D points only
-    normals = np.zeros((2, dst_points.shape[1]))
-    
-    for i in range(dst_points.shape[1]):
-        _, idxs = tree.query(dst_points[:2, i].reshape(1,-1), k=num_neighbors)
-        neighbors = dst_points[:2, idxs[0]].T  # shape (k,2)
+def compute_normals(dst_points, num_neighbors=6):
+    """
+    dst_points: (3, N) homogeneous
+    returns normals: (2, N)
+    """
+    pts = dst_points[:2, :].T  # (N,2)
+    tree = KDTree(pts)
+    N = pts.shape[0]
+    normals = np.zeros((2, N))
+    for i in range(N):
+        k = min(num_neighbors, N)
+        _, idxs = tree.query(pts[i].reshape(1,-1), k=k)
+        neighbors = pts[idxs[0]]     # (k,2)
         cov = np.cov(neighbors.T)
-        _, vecs = np.linalg.eigh(cov)
-        normals[:, i] = vecs[:, 0]  # eigenvector of smallest eigenvalue
-    
-    # Flip normals to be consistent
-    if np.mean(normals[0,:]) < 0:
-        normals *= -1
-    
+        # eigenvector of smallest eigenvalue -> normal
+        evals, evecs = np.linalg.eigh(cov)
+        n = evecs[:, 0]
+        normals[:, i] = n
+
+    # Orient normals to point roughly toward centroid (simple heuristic)
+    centroid = np.mean(pts, axis=0)
+    vec_to_centroid = (centroid - pts).T  # shape (2, N)
+    dot = np.sum(normals * vec_to_centroid, axis=0)
+    flip_mask = dot > 0   # if normal points toward centroid, flip so it points outward
+    normals[:, flip_mask] *= -1
+
     return normals
 
 
@@ -178,7 +189,7 @@ def icp(src, dst, num_iterations, odom_htm, num_neighbors):
         first row is xs, second row is ys, third row is ones, a column is the coord of a scan.
         dst (np.array of size 3, N): x and y values of destination lidar scans,
         first row is xs, second row is ys, third row is ones, a column is the coord of a scan.
-        iterations (int): number of icp iterations
+        num_iterations (int): number of icp iterations
         odom_htm (np.array of size 3, 3): homogeneous transformation matrix from
         pose where the source scan was taken to the pose that the destination scan
         was taken based on odometry.
