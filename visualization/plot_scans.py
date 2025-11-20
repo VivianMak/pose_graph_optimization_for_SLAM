@@ -5,13 +5,13 @@ import matplotlib.pyplot as plt
 data = np.loadtxt("lidar_scans.csv", delimiter=",")
 
 # pick a scan to visualize
-scan = data[100]   # first scan
+scan = data[0]   # first scan
 scan = np.where(np.isfinite(scan), scan, 0.0)
 angles = np.linspace(0, 2*np.pi, len(scan), endpoint=False)
 xs = scan * np.cos(angles)
 ys = scan * np.sin(angles)
 
-scan2 = data[3150]   # second scan
+scan2 = data[2695]   # second scan
 scan2 = np.where(np.isfinite(scan2), scan2, 0.0)
 angles2 = np.linspace(0, 2*np.pi, len(scan2), endpoint=False)
 xs2 = scan2 * np.cos(angles2)
