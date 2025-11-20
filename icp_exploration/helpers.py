@@ -82,14 +82,13 @@ def make_correspondences(src_points, dst_points):
 
     # Make a list of lists containing corresponding indices
     correspondences = [(i, indices[i,0]) for i in range(len(src_points[0]))]
-    return correspondences, dists
+    return correspondences
 
-def least_squares_transform(src, dst, normals, dists, threshold, sigma):
+def least_squares_transform(src, dst, normals, sigma):
     # Point to plane optimization
-    mask = (dists < threshold).flatten()
-    src = src[:2, mask].T
-    dst = dst[:2, mask].T
-    normals = normals[:, mask].T
+    src = src[:2, :].T
+    dst = dst[:2, :].T
+    normals = normals[:, :].T
 
     A = np.zeros((len(src), 3)) # Transformation to move src_point along normal
     b = np.zeros(len(src))  # How far p is from the tangent along the normal
@@ -162,20 +161,17 @@ def htm_2d(R, t):
     T[:2, 2] = t
     return T
 
-def iterate_icp(src, dst, normals):
-    corresponding_pts, dists = make_correspondences(src, dst)
+def iterate_icp(src, dst, normals, downsample):
+    corresponding_pts = make_correspondences(src, dst)
     corresponding_dst = np.hstack([dst[:, pair[1]].reshape(3, 1) for pair in corresponding_pts])
     corresponding_norms = normals[:, [pair[1] for pair in corresponding_pts]]
 
-    error_threshold = 1
     error_weighting = 0.5
 
     src_to_dst_htm = least_squares_transform(
-        src,
-        corresponding_dst,
-        corresponding_norms,
-        dists,
-        error_threshold,
+        src[:, ::downsample],
+        corresponding_dst[:, ::downsample],
+        corresponding_norms[:, ::downsample],
         error_weighting
     )
     transformed_src = src_to_dst_htm @ src
@@ -204,8 +200,18 @@ def icp(src, dst, num_iterations, odom_htm, num_neighbors):
     src_to_dst = odom_htm
     src_points = odom_htm @ src # doesn't get returned
 
+    coarse_thresh = 10
+    medium_thresh = 30
+
     for i in range(num_iterations):
-        src_points, iteration_htm = iterate_icp(src_points, dst, normals)
+        downsample = 1
+
+        if i < coarse_thresh:
+            downsample = 20
+        elif i < medium_thresh:
+            downsample = 10
+
+        src_points, iteration_htm = iterate_icp(src_points, dst, normals, downsample)
         src_to_dst = iteration_htm @ src_to_dst
 
     return src_to_dst

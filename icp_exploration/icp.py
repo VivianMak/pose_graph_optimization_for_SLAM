@@ -14,11 +14,11 @@ noisy_ys = noisy_data["y"].values
 noisy_thetas = noisy_data["theta"].values
 
 # Choose indices
-# pose_id_one = 0
-# pose_id_two = 2695
+pose_id_one = 0
+pose_id_two = 2695
 
-pose_id_one = 1100
-pose_id_two = 1200
+# pose_id_one = 523
+# pose_id_two = 3023
 
 # Select chosen scans
 scan = scan_data[pose_id_one]   # first scan
@@ -64,6 +64,8 @@ src_to_dst = icp(src_points, dst_points, num_iterations, htm_one_two, num_neighb
 
 transformed_src = src_to_dst @ src_points
 
+print(src_to_dst)
+
 plt.quiver(
     point_xs,
     point_ys, 
@@ -72,7 +74,7 @@ plt.quiver(
 )
 plt.scatter(point_xs, point_ys, color='red')
 plt.axis("equal")
-plt.scatter(xs, ys, s=2, c='blue')  # s=point size
+plt.scatter(xs, ys, s=5, c='blue')  # s=point size
 plt.scatter(src_points[0, :], src_points[1, :], s=2, c='red')
 plt.scatter(odom_transform_src[0, :], odom_transform_src[1, :], s=2, c='orange')
 plt.scatter(transformed_src[0, :], transformed_src[1, :], s=2, c='green')
