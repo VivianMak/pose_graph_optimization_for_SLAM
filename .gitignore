@@ -53,4 +53,5 @@ install_manifest.txt
 *.pyc
 ccache/
 ros2_ws/.vscode
+.vscode/
 venv/
