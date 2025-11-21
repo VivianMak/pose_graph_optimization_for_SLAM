@@ -32,7 +32,7 @@ void read_odom(std::string file_path, std::vector<double> &x_ptr, std::vector<do
 }
 
 void read_lidar(std::string file_path, std::vector<std::vector<LaserScan>> &lidar_ptr) {
-     std::ifstream file(file_path);
+    std::ifstream file(file_path);
     if (!file) {
         std::cerr << "Cannot open file.\n";
         return;
@@ -59,3 +59,16 @@ void read_lidar(std::string file_path, std::vector<std::vector<LaserScan>> &lida
         lidar_ptr.push_back(single_laser_scan);
     }
 }   
+
+Eigen::MatrixXd scan_to_matrix(std::vector<LaserScan> single_scan) {
+    size_t num_points = single_scan.size();
+    Eigen::MatrixXd mat(3, num_points);
+
+    for (size_t idx = 0; idx < num_points; ++idx) {
+        mat(0, idx) = single_scan[idx].x;
+        mat(1, idx) = single_scan[idx].y;
+        mat(2, idx) = 1;
+    }
+    
+    return mat;
+}

@@ -14,16 +14,6 @@ int main() {
     
     read_lidar("lidar_scans.csv", *laser_scans);
 
-    for (size_t i = 0; i < 1 && i < laser_scans->size(); ++i) {
-        std::cout << "------- scan " << i << " ------------\n";
-        for (LaserScan& scan : laser_scans->at(i)) {
-            std::cout << "angle: " << scan.angle_rad
-            << " distance: " << scan.distance
-            << " x: " << scan.x
-            << " y: " << scan.y << "\n";
-        }
-        std::cout << "\n";
-    }
-
-    std::cout << laser_scans->at(0).size() << "\n";
+    Eigen::MatrixXd laser_scan_matrix = scan_to_matrix(laser_scans->at(0));
+    std::cout << laser_scan_matrix.rows() << " " << laser_scan_matrix.cols() << "\n";
 }
