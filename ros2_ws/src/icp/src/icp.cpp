@@ -2,7 +2,7 @@
 
 int main() {
     int scan_one_idx = 0;
-    // int scan_two_idx = 2695;
+    int scan_two_idx = 2695;
 
     auto noisy_poses = std::make_unique<std::vector<Pose>>();
 
@@ -18,9 +18,10 @@ int main() {
     Eigen::MatrixXd laser_scan_matrix = scan_to_matrix(laser_scans->at(0));
     std::cout << laser_scan_matrix.rows() << " " << laser_scan_matrix.cols() << "\n";
 
-    Eigen::MatrixXd odom_one_htm = pose_to_htm(
-        noisy_poses->at(scan_one_idx)
+    Eigen::MatrixXd one_to_two_htm = htm_between_poses(
+        noisy_poses->at(scan_one_idx),
+        noisy_poses->at(scan_two_idx)
     );
 
-    std::cout << odom_one_htm << "\n";
+    std::cout << one_to_two_htm << "\n";
 }

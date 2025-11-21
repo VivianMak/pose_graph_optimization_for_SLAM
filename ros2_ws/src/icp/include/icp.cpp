@@ -82,3 +82,11 @@ Eigen::Matrix3d pose_to_htm(Pose pose) {
     return T;
 }
 
+Eigen::MatrixXd htm_between_poses(Pose pose_1, Pose pose_2) {
+    // Computes transform from pose 1 to pose 2
+    Eigen::Matrix3d htm1 = pose_to_htm(pose_1);
+    Eigen::Matrix3d htm2 = pose_to_htm(pose_2);
+
+    return htm1.inverse() * htm2;
+}
+
