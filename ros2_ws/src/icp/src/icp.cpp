@@ -1,14 +1,15 @@
 #include "icp.h"
 
 int main() {
-    auto noisy_xs = std::make_unique<std::vector<double>>();
-    auto noisy_ys = std::make_unique<std::vector<double>>();
-    auto noisy_thetas = std::make_unique<std::vector<double>>();
+    int scan_one_idx = 0;
+    // int scan_two_idx = 2695;
 
-    read_odom("noisy_odom_data.csv", *noisy_xs, *noisy_ys, *noisy_thetas);
+    auto noisy_poses = std::make_unique<std::vector<Pose>>();
 
-    for (size_t i = 0; i < 5 && i < (*noisy_xs).size(); ++i)
-        std::cout << (*noisy_xs)[i] << ", " << (*noisy_ys)[i] << ", " << (*noisy_thetas)[i] << "\n";
+    read_odom("noisy_odom_data.csv", *noisy_poses);
+
+    for (size_t i = 0; i < 5 && i < noisy_poses->size(); ++i)
+        std::cout << noisy_poses->at(i).x << ", " << noisy_poses->at(i).y << ", " << noisy_poses->at(i).theta << "\n";
 
     auto laser_scans = std::make_unique<std::vector<std::vector<LaserScan>>>();
     
@@ -16,4 +17,10 @@ int main() {
 
     Eigen::MatrixXd laser_scan_matrix = scan_to_matrix(laser_scans->at(0));
     std::cout << laser_scan_matrix.rows() << " " << laser_scan_matrix.cols() << "\n";
+
+    Eigen::MatrixXd odom_one_htm = pose_to_htm(
+        noisy_poses->at(scan_one_idx)
+    );
+
+    std::cout << odom_one_htm << "\n";
 }

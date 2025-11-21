@@ -3,7 +3,7 @@
 #include <sstream>
 #include <cmath>
 
-void read_odom(std::string file_path, std::vector<double> &x_ptr, std::vector<double> &y_ptr, std::vector<double> &theta_ptr) {
+void read_odom(std::string file_path, std::vector<Pose> &pose_vector) {
     std::ifstream file(file_path);
     if (!file) {
         std::cerr << "Cannot open file.\n";
@@ -23,9 +23,7 @@ void read_odom(std::string file_path, std::vector<double> &x_ptr, std::vector<do
         while (std::getline(ss, val, ',') && i < 3) {
             v[i++] = std::stod(val);
         }
-        x_ptr.push_back(v[0]);
-        y_ptr.push_back(v[1]);
-        theta_ptr.push_back(v[2]);
+        pose_vector.push_back({v[0], v[1], v[2]});
     }
 
     return;
@@ -72,3 +70,15 @@ Eigen::MatrixXd scan_to_matrix(std::vector<LaserScan> single_scan) {
     
     return mat;
 }
+
+Eigen::Matrix3d pose_to_htm(Pose pose) {
+    double c = std::cos(pose.theta);
+    double s = std::sin(pose.theta);
+
+    Eigen::Matrix3d T;
+    T << c, -s, pose.x,
+         s,  c, pose.y,
+         0,  0, 1;
+    return T;
+}
+
