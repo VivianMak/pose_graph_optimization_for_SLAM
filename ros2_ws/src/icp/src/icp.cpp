@@ -8,20 +8,18 @@ int main() {
 
     read_odom("noisy_odom_data.csv", *noisy_poses);
 
-    for (size_t i = 0; i < 5 && i < noisy_poses->size(); ++i)
-        std::cout << noisy_poses->at(i).x << ", " << noisy_poses->at(i).y << ", " << noisy_poses->at(i).theta << "\n";
-
     auto laser_scans = std::make_unique<std::vector<std::vector<LaserScan>>>();
     
     read_lidar("lidar_scans.csv", *laser_scans);
 
-    Eigen::MatrixXd laser_scan_matrix = scan_to_matrix(laser_scans->at(0));
-    std::cout << laser_scan_matrix.rows() << " " << laser_scan_matrix.cols() << "\n";
+    Eigen::MatrixXd src_point_matrix = scan_to_matrix(laser_scans->at(scan_two_idx));
+    Eigen::MatrixXd dst_point_matrix = scan_to_matrix(laser_scans->at(scan_one_idx));
 
-    Eigen::MatrixXd one_to_two_htm = htm_between_poses(
+    Eigen::MatrixXd odom_htm = htm_between_poses(
         noisy_poses->at(scan_one_idx),
         noisy_poses->at(scan_two_idx)
     );
 
-    std::cout << one_to_two_htm << "\n";
+    Eigen::MatrixXd normals = compute_normals(dst_point_matrix, 10);
+    std::cout << normals.rows() << " " << normals.cols() << "\n";
 }
