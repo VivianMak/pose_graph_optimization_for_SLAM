@@ -135,7 +135,7 @@ Eigen::MatrixXd compute_normals(Eigen::MatrixXd dst_points, size_t num_neighbors
 
         dst_kdtree.query(query_pt, num_neighbors, idx.data(), dists.data()); // Find the indices of the nearest neighbors
 
-        for (size_t i = 0; i < num_neighbors; i++) {
+        for (size_t i = 0; i < num_neighbors; i++) { // Use indices to put neighboring points into neighbors matrix
             neighbors.row(i) = dst_2d.row(idx[i]);
         }
 
@@ -151,5 +151,32 @@ Eigen::MatrixXd compute_normals(Eigen::MatrixXd dst_points, size_t num_neighbors
     }
     
     return normals;
+}
+
+std::vector<std::ptrdiff_t> make_correspondences(Eigen::MatrixXd src_points, Eigen::MatrixXd dst_points) {
+    // Return a vector of the corresponding destination point indices, first index in vector is the index of the dst point that is closest to the first src point
+    using KDTree = nanoflann::KDTreeEigenMatrixAdaptor<
+        Eigen::MatrixXd,
+        2              // Dimension, two columns, x and y, for kNN
+    >;
+
+    size_t num_points = src_points.cols();
+    Eigen::MatrixXd dst_2d = dst_points.topRows(2).transpose(); // Size (n, 2), KDtree needs to be made from eigen matrix where each row is a point
+
+    KDTree dst_kdtree(2, std::cref(dst_2d), 10 /* leaf size */); // Make the KDtree
+
+    std::vector<std::ptrdiff_t> indices(num_points); // Stores the indices of the closest corresponding point
+
+    for (size_t point_idx = 0; point_idx < num_points; point_idx++) {
+        double query_pt[2] = { src_points(0, point_idx), src_points(1, point_idx) }; // Point we're finding the index of the closest corresponding point of
+
+        std::ptrdiff_t out_idx;
+        double out_dist; // Doesn't get used
+        dst_kdtree.query(query_pt, 1, &out_idx, &out_dist); // Find the index of the closest corresponding point
+
+        indices[point_idx] = out_idx;
+    }
+    
+    return indices;
 }
 
