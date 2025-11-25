@@ -23,3 +23,4 @@ Eigen::MatrixXd htm_between_poses(Pose pose_1, Pose pose_2);
 Eigen::Vector2d get_smallest_ev(const Eigen::MatrixXd& pts);
 Eigen::MatrixXd compute_normals(Eigen::MatrixXd dst_points, size_t num_neighbors);
 std::vector<std::ptrdiff_t> make_correspondences(Eigen::MatrixXd src_points, Eigen::MatrixXd dst_points);
+Eigen::Matrix3d least_squares_transform(Eigen::MatrixXd src_points, Eigen::MatrixXd dst_points, Eigen::MatrixXd normals, double error_weight);

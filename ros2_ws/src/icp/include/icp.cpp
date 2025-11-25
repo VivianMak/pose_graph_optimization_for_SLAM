@@ -150,7 +150,7 @@ Eigen::MatrixXd compute_normals(Eigen::MatrixXd dst_points, size_t num_neighbors
             normals.col(point_idx) = -normals.col(point_idx); // if dot > 0, normal points *toward* centroid, flip it for consistency
     }
     
-    return normals;
+    return normals; // Size 2, n
 }
 
 std::vector<std::ptrdiff_t> make_correspondences(Eigen::MatrixXd src_points, Eigen::MatrixXd dst_points) {
@@ -178,5 +178,48 @@ std::vector<std::ptrdiff_t> make_correspondences(Eigen::MatrixXd src_points, Eig
     }
     
     return indices;
+}
+
+Eigen::Matrix3d least_squares_transform(Eigen::MatrixXd src_points, Eigen::MatrixXd dst_points, Eigen::MatrixXd normals, double error_weight) {
+    size_t num_points = src_points.cols();
+
+    Eigen::MatrixXd A(num_points, 3); // Transformation to move src_point along normal, 3 unknowns, rotational, x, and y error transforms
+    Eigen::VectorXd b(num_points); // How far the point is from the tangent along the normal
+    Eigen::VectorXd weights(num_points);
+
+    for (size_t idx = 0; idx < num_points; idx++) {
+        // Get the current points and normal
+        Eigen::VectorXd src_point = src_points.block<2, 1>(0, idx);
+        Eigen::VectorXd dst_point = dst_points.block<2, 1>(0, idx);
+        Eigen::VectorXd normal_vector = normals.col(idx);
+
+        // Calculate current error and weight
+        double error = normal_vector.dot(src_point - dst_point);
+        weights(idx) = std::exp(-(error * error) / (2 * error_weight * error_weight));
+
+        // Calculate transform for A and error for b
+        A.row(idx) << -src_point(1) * normal_vector(0) + normal_vector(1) * src_point(0), normal_vector(0), normal_vector(1);
+        b(idx) = normal_vector.dot(dst_point - src_point);
+    }
+
+    // Calculate and apply weights to A and b
+    Eigen::VectorXd W_sqrt = weights.array().sqrt();
+    Eigen::MatrixXd A_weighted = A.array().colwise() * W_sqrt.array();
+    Eigen::VectorXd b_weighted = b.array() * W_sqrt.array();
+
+    Eigen::Vector3d x = A_weighted.colPivHouseholderQr().solve(b_weighted); // Use least squares to minimize error
+
+    // Extract parameters
+    double theta = x(0);
+    double tx = x(1);
+    double ty = x(2);
+
+    // Make lidar based htm for optimized transformation of src to dst
+    Eigen::Matrix3d T;
+    T << std::cos(theta), -std::sin(theta), tx,
+         std::sin(theta),  std::cos(theta), ty,
+                       0,                0,  1;
+
+    return T; 
 }
 
