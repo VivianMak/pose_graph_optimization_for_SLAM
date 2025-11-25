@@ -223,3 +223,25 @@ Eigen::Matrix3d least_squares_transform(Eigen::MatrixXd src_points, Eigen::Matri
     return T; 
 }
 
+Eigen::Matrix3d iterate_icp(Eigen::MatrixXd src_points, Eigen::MatrixXd dst_points, Eigen::MatrixXd normals, double error_weight, int downsample) {
+    // Get corresponding points, indices of dst points closest to corresponding src points
+    std::vector<std::ptrdiff_t> corresponding_indices = make_correspondences(src_points, dst_points);
+
+    size_t num_points = (src_points.cols() + downsample - 1) / downsample;
+    Eigen::MatrixXd corresponding_dst(3, num_points);
+    Eigen::MatrixXd corresponding_norms(2, num_points);
+
+    Eigen::MatrixXd downsampled_src(3, num_points);
+
+    // Build corresponding_dst and corresponding_norms
+    for (size_t idx = 0; idx < num_points; idx+=downsample) {
+        corresponding_dst.col(idx) = dst_points.col(corresponding_indices[idx]);
+        corresponding_norms.col(idx) = normals.col(corresponding_indices[idx]);
+        downsampled_src.col(idx) = src_points.col(corresponding_indices[idx]);
+    }
+
+    Eigen::Matrix3d src_to_dst_htm = least_squares_transform(downsampled_src, corresponding_dst, corresponding_norms, error_weight);
+
+    return src_to_dst_htm;
+}
+
