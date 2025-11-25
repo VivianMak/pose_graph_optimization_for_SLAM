@@ -28,13 +28,18 @@ include_directories(
 )
 
 set(ICP_EXECUTABLE "icp")
-
 add_executable(${ICP_EXECUTABLE} src/icp.cpp include/icp.cpp)
 target_link_libraries(${ICP_EXECUTABLE} PUBLIC Eigen3::Eigen)
 ament_target_dependencies(${ICP_EXECUTABLE} ${DEPENDENCIES})
 
+set(EX_EXECUTABLE "lidar_htm_example")
+add_executable(${EX_EXECUTABLE} src/lidar_htm_example.cpp include/icp.cpp)
+target_link_libraries(${EX_EXECUTABLE} PUBLIC Eigen3::Eigen)
+ament_target_dependencies(${EX_EXECUTABLE} ${DEPENDENCIES})
+
 install(TARGETS
     ${ICP_EXECUTABLE}
+    ${EX_EXECUTABLE}
     DESTINATION lib/${PROJECT_NAME}
 )
 
