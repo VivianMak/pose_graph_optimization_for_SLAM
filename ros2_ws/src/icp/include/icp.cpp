@@ -83,7 +83,7 @@ Eigen::Matrix3d pose_to_htm(Pose pose) {
     return T;
 }
 
-Eigen::MatrixXd htm_between_poses(Pose pose_1, Pose pose_2) {
+Eigen::Matrix3d htm_between_poses(Pose pose_1, Pose pose_2) {
     // Computes transform from pose 1 to pose 2
     Eigen::Matrix3d htm1 = pose_to_htm(pose_1);
     Eigen::Matrix3d htm2 = pose_to_htm(pose_2);
@@ -223,25 +223,57 @@ Eigen::Matrix3d least_squares_transform(Eigen::MatrixXd src_points, Eigen::Matri
     return T; 
 }
 
-Eigen::Matrix3d iterate_icp(Eigen::MatrixXd src_points, Eigen::MatrixXd dst_points, Eigen::MatrixXd normals, double error_weight, int downsample) {
+Eigen::Matrix3d iterate_icp(Eigen::MatrixXd src_points, Eigen::MatrixXd dst_points, Eigen::MatrixXd normals, double error_weight, size_t downsample) {
     // Get corresponding points, indices of dst points closest to corresponding src points
     std::vector<std::ptrdiff_t> corresponding_indices = make_correspondences(src_points, dst_points);
 
-    size_t num_points = (src_points.cols() + downsample - 1) / downsample;
-    Eigen::MatrixXd corresponding_dst(3, num_points);
-    Eigen::MatrixXd corresponding_norms(2, num_points);
+    size_t num_points = src_points.cols();
 
-    Eigen::MatrixXd downsampled_src(3, num_points);
+    size_t downsampled_points = (num_points + downsample - 1) / downsample;
+    Eigen::MatrixXd corresponding_dst(3, downsampled_points);
+    Eigen::MatrixXd corresponding_norms(2, downsampled_points);
+
+    Eigen::MatrixXd downsampled_src(3, downsampled_points);
 
     // Build corresponding_dst and corresponding_norms
+    size_t col_idx = 0; // Correctly iterates through downsampled vars
     for (size_t idx = 0; idx < num_points; idx+=downsample) {
-        corresponding_dst.col(idx) = dst_points.col(corresponding_indices[idx]);
-        corresponding_norms.col(idx) = normals.col(corresponding_indices[idx]);
-        downsampled_src.col(idx) = src_points.col(corresponding_indices[idx]);
+        size_t corr_idx = corresponding_indices[idx];
+        corresponding_dst.col(col_idx) = dst_points.col(corr_idx);
+        corresponding_norms.col(col_idx) = normals.col(corr_idx);
+        downsampled_src.col(col_idx) = src_points.col(idx);
+        col_idx++;
     }
 
     Eigen::Matrix3d src_to_dst_htm = least_squares_transform(downsampled_src, corresponding_dst, corresponding_norms, error_weight);
 
     return src_to_dst_htm;
+}
+
+Eigen::Matrix3d icp(Eigen::MatrixXd src_points, Eigen::MatrixXd dst_points, size_t num_iterations, Eigen::Matrix3d odom_htm, size_t num_neighbors, double error_weight) {
+    Eigen::MatrixXd normals = compute_normals(dst_points, num_neighbors);
+    Eigen::MatrixXd transformed_src_points = odom_htm * src_points;
+
+    Eigen::Matrix3d lidar_htm = odom_htm; // Htm to be returned
+
+    size_t coarse_thresh = 10;
+    size_t medium_thresh = 30;
+
+    for (size_t idx = 0; idx < num_iterations; idx++) {
+        size_t downsample = 1;
+
+        if (idx < coarse_thresh) {
+            downsample = 20;
+        } else if (idx < medium_thresh) {
+            downsample = 10;
+        }
+
+        Eigen::Matrix3d iteration_htm = iterate_icp(transformed_src_points, dst_points, normals, error_weight, downsample);
+        
+        transformed_src_points = iteration_htm * transformed_src_points;
+        lidar_htm = iteration_htm * lidar_htm;
+    }
+
+    return lidar_htm;
 }
 

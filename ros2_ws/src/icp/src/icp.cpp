@@ -15,16 +15,16 @@ int main() {
     Eigen::MatrixXd src_point_matrix = scan_to_matrix(laser_scans->at(scan_two_idx)); // 3, n
     Eigen::MatrixXd dst_point_matrix = scan_to_matrix(laser_scans->at(scan_one_idx)); // 3, n
 
-    Eigen::MatrixXd odom_htm = htm_between_poses(
+    Eigen::Matrix3d odom_htm = htm_between_poses(
         noisy_poses->at(scan_one_idx),
         noisy_poses->at(scan_two_idx)
     ); // 3, 3
 
-    Eigen::MatrixXd normals = compute_normals(dst_point_matrix, 10);
+    size_t num_iterations = 100;
+    size_t num_neighbors = 10;
+    double error_weighting = 0.5;
 
-    Eigen::MatrixXd odom_transformed_src = odom_htm * src_point_matrix;
-
-    Eigen::Matrix3d src_to_dst_htm = iterate_icp(odom_transformed_src, dst_point_matrix, normals, 0.5, 1);
+    Eigen::Matrix3d src_to_dst_htm = icp(src_point_matrix, dst_point_matrix, num_iterations, odom_htm, num_neighbors, error_weighting);
 
     std::cout << src_to_dst_htm << "\n";
 }
