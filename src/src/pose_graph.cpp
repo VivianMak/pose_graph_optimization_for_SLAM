@@ -1,104 +1,126 @@
 #include "pose_graph.hpp"
-
-#include <iostream>
 #include <cmath>
+#include <iostream>
 
 namespace pose_graph {
 
-// Constructor
 PoseGraph::PoseGraph()
-    : threshold_x_(0.5),              // meters
-      threshold_y_(0.5),              // meters
-      threshold_theta_rad_(M_PI / 6), // 30 deg ≈ π/6 radians
-      check_node_(nullptr),
-      closed_loop_(false)
-{}
-
-// Add node to graph
-utils::Node* PoseGraph::addNode(int node_id, const utils::Pose& pose) {
-    std::cout << "---------- ADDING NODE --------------" << std::endl;
-
-    nodes_.push_back(std::make_unique<utils::Node>(node_id, pose));
-    utils::Node* node_ptr = nodes_.back().get();
-
-    // only first node used as loop-closure reference (please check mo)
-    if (!check_node_) {
-        check_node_ = node_ptr;
-    }
-
-    return node_ptr;
+{
+    // Constructor with empty function, thresholds can be added later if needed.
 }
 
-// Register edge globally
-void PoseGraph::registerEdge(utils::Edge* edge_ptr) {
-    if (!edge_ptr) {
-        return;
+void PoseGraph::build(const std::vector<SavedLaserScan>& scans,
+                      const std::vector<SavedOdom>& odoms)
+{
+    /*
+     * Build the pose graph from odometry and scans.
+     *
+     * Currently only odometry is used to construct poses.
+     * Scans are reserved for future loop-closure or matching steps.
+     *
+     * @param scans  lidar scan data (unused for now)
+     * @param odoms  wheel odometry data used to create Nodes
+     * @return void
+     */
+
+    (void)scans;  // unused for now
+
+    nodes_.clear();
+    edge_indices_.clear();
+
+    // Create one Node per odometry entry
+    for (std::size_t i = 0; i < odoms.size(); ++i) {
+        utils::Pose p = odomToPose(odoms[i]);
+        nodes_.push_back(std::make_unique<utils::Node>(static_cast<int>(i), p));
     }
 
-    std::cout << "---------- ADDING EDGE --------------" << std::endl;
-    edges_.push_back(edge_ptr);
+    // Connect consecutive nodes with edges
+    addSequentialEdges();
 }
 
-// Graph accessors
-const std::vector<std::unique_ptr<utils::Node>>& PoseGraph::nodes() const {
+const std::vector<std::unique_ptr<utils::Node>>& PoseGraph::nodes() const
+{
+    /*
+     * Return reference to internal node vector.
+     *
+     * @return vector of unique_ptr<Node>
+     */
     return nodes_;
 }
 
-const std::vector<utils::Edge*>& PoseGraph::edges() const {
-    return edges_;
+const std::vector<EdgeIndex>& PoseGraph::edgeIndices() const
+{
+    /*
+     * Return simple parent-child index pairs for edges.
+     *
+     * @return vector of EdgeIndex structs
+     */
+    return edge_indices_;
 }
 
-// Assign weight (temporary placeholder, please check Vivian)
-void PoseGraph::assignWeight() {
-    // TODO: implement edge weighting / information matrices if needed
+utils::Pose PoseGraph::odomToPose(const SavedOdom& odom) const
+{
+    /*
+     * Convert odometry quaternion to a 2D pose.
+     *
+     * Extracts x, y directly. Computes yaw from quaternion, converts to degrees.
+     *
+     * @param odom  odometry entry
+     * @return Pose (x, y, theta_deg)
+     */
+
+    double x = odom.position_x;
+    double y = odom.position_y;
+
+    // quaternion → yaw
+    double qx = odom.orientation_x;
+    double qy = odom.orientation_y;
+    double qz = odom.orientation_z;
+    double qw = odom.orientation_w;
+
+    double siny_cosp = 2.0 * (qw * qz + qx * qy);
+    double cosy_cosp = 1.0 - 2.0 * (qy * qy + qz * qz);
+    double yaw_rad = std::atan2(siny_cosp, cosy_cosp);
+    double yaw_deg = yaw_rad * 180.0 / M_PI;
+
+    return utils::Pose(x, y, yaw_deg);
 }
 
-// Check loop closure
-void PoseGraph::checkLoopClosure(utils::Node* node) {
-    if (!check_node_ || !node) {
+void PoseGraph::addSequentialEdges()
+{
+    /*
+     * Add edges between nodes i to i+1.
+     *
+     * Computes relative transform via delta pose and stores edges
+     * inside the parent Node. Also fills the edge index list for
+     * external inspection.
+     *
+     * @return void
+     */
+
+    if (nodes_.size() < 2) {
         return;
     }
 
-    // pose difference wrt reference node
-    utils::Pose delta = node->pose - check_node_->pose;
+    for (std::size_t i = 0; i + 1 < nodes_.size(); ++i) {
+        utils::Node* parent = nodes_[i].get();
+        utils::Node* child  = nodes_[i + 1].get();
 
-    if (withinThreshold(delta)) {
-        std::cout << "------------- LOOP CLOSURE FOUND --------------" << std::endl;
+        utils::Pose delta = child->pose - parent->pose;
 
-        // heading already in radians
-        double t = delta.theta;
+        // convert heading delta into radians for trig
+        double theta_rad = delta.theta * M_PI / 180.0;
 
-        // relative SE2 transform (3×3 homogeneous)
         Eigen::Matrix3d T;
-        T << std::cos(t), -std::sin(t), delta.x,
-             std::sin(t),  std::cos(t), delta.y,
-             0.0,          0.0,         1.0;
+        T << std::cos(theta_rad), -std::sin(theta_rad), delta.x,
+             std::sin(theta_rad),  std::cos(theta_rad), delta.y,
+             0.0,                  0.0,                 1.0;
 
-        // parent: reference node, child: current node
-        check_node_->addEdge(node, T);
+        parent->addEdge(child, T);
 
-        // keep a raw pointer to the last created edge
-        utils::Edge* new_edge = check_node_->edges.back().get();
-        registerEdge(new_edge);
-
-        closed_loop_ = true;
+        EdgeIndex idx{ i, i + 1 };
+        edge_indices_.push_back(idx);
     }
 }
 
-// Loop closure status
-bool PoseGraph::isLoopClosed() const {
-    return closed_loop_;
-}
-
-void PoseGraph::resetLoopClosed() {
-    closed_loop_ = false;
-}
-
-// Helper: threshold check
-bool PoseGraph::withinThreshold(const utils::Pose& d) const {
-    return (std::fabs(d.x)     <= threshold_x_) &&
-           (std::fabs(d.y)     <= threshold_y_) &&
-           (std::fabs(d.theta) <= threshold_theta_rad_);
-}
-
-}
+} 
