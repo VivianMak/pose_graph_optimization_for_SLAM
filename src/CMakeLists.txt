@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 # Include directory path
 set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Add Eigen include directory
 include_directories(
