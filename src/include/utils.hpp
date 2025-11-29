@@ -15,12 +15,6 @@ inline double wrap_rad(double angle) {
     return angle;
 }
 
-inline double wrap_deg(double angle_deg) {
-    while (angle_deg > 180.0)  angle_deg -= 360.0;
-    while (angle_deg < -180.0) angle_deg += 360.0;
-    return angle_deg;
-}
-
 
 struct Point {
     double x;       
@@ -47,7 +41,7 @@ struct Pose {
         return Pose(
             x - old.x,
             y - old.y,
-            wrap_deg(theta - old.theta)
+            wrap_rad(theta - old.theta)
         );
     }
 };

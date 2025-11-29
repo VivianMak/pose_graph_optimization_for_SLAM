@@ -19,7 +19,5 @@ add_executable(main
     src/read_data.cpp
     src/test_structs.cpp
     src/pose_graph.cpp
+    # src/gn_optimizer.cpp
 )
-
-# add_executable(test_structs src/test_structs.cpp)
-# add_executable(read_data src/read_data.cpp)

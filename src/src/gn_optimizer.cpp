@@ -5,6 +5,7 @@
 
 #include "gn_optimizer.hpp"
 #include "gn_helper.hpp"
+#include "utils.hpp"
 
 namespace GN
 {
@@ -25,7 +26,8 @@ namespace GN
         // initalize error and jacobian return struct for current adjancent nodes
         GN::eJ currenteJ;
 
-        // compute error
+        // Compute error
+        std::cout << "---------- Computing Error ----------" << std::endl;
 
         // Invert ICP j -> i transform
         GN::Mat33 Z_ij = z_ji.inverse();
@@ -43,42 +45,20 @@ namespace GN
         currenteJ.e(0) = xj_pred(0) - xj(0);
         currenteJ.e(1) = xj_pred(1) - xj(1);
         currenteJ.e(2) = utils::wrap_rad(xj_pred(0) - xj(0));
-        
 
-        // this is a transform!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
-        double zji_x = zji(0), zji_y = zji(1), zji_th = zji(2);
+        std::cout << "ERROR IS: " << currenteJ.e << std::endl;
 
-        // Rotation of node i
-        GN::Vec2 Ri;
-        Ri << cos(xi_th),  sin(xi_th),
-            -sin(xi_th),  cos(xi_th);
-
-        // building of the vectors
-        GN::Vec2 dij;
-        dij << (xj_x - xi_x),
-            (xj_y - xi_y);
-
-        GN::Vec2 zji_t;
-        zji_t << zji_x,
-                zji_y;
-
-        // error translation compoennt
-        GN::Vec2 etrans = Ri * (dij - zji_t);
-
-        // error rotation component
-        double eth = (xj_th - xi_th) - zji_th;
-
-        // error vector
-        currenteJ.e << etrans(0), etrans(1), eth;
-        
-        // compute jacobian
-        GN::Mat36 J;
-        J.setZero();
+        // Compute Jacobian
+        std::cout << "---------- Computing Jacobian ----------" << std::endl;
 
         // decpmse poses
         double xi_x = xi(0), xi_y = xi(1), xi_th = xi(2);
         double xj_x = xj(0), xj_y = xj(1), xj_th = xj(2);
 
+        
+        // compute jacobian
+        GN::Mat36 J;
+        J.setZero();
 
         // d e_trans / d xi 
         J.block<2,2>(0,0) = -Ri;
@@ -107,16 +87,14 @@ namespace GN
 
     void buildLinearHb(const size_t n,
                         const std::vector<GN::Vec3> &X,  
-                        // const std::vector<GN::Mat33> &Z,
                         GN::dMat &H,
                         GN::dVec &b)
     {
         /*
-        * Build the coeffient H matrix and b vector
+        * Build the coeffient H matrix and b vector for all nodes
         *
         * @param n - length
         * @param X - vector of poses copied from nodes (N) vector
-        * @param Z - vector of 3x3 homogeneous matrix from ICP
         * @param H - empty size-defined sparse matrix to build
         * @param b - empty size-defined vector to build
         */
@@ -125,11 +103,8 @@ namespace GN
         {
             int i = k+1;
             int j = k;
-
-            (edges.end()-1).transform
             
             // Get the error vec and Jacobian mat
-            // X[i].(edges.end()-1).transform
             GN::eJ eJ = computeErrorAndJacobian(X[i].pose, 
                                                 X[j].pose, 
                                                 Z_[k]);
@@ -144,8 +119,8 @@ namespace GN
                 return true;
             }
 
-            Eigen::Matrix<double,6,6> H_ij = J.transpose() * J;
-            Eigen::Matrix<double,6,1> b_ij = -J.transpose() * e;
+            Eigen::Matrix<double,6,6> H_ij = J.transpose() * config_.omega * J;
+            Eigen::Matrix<double,6,1> b_ij = -J.transpose() * config_.omega * e;
 
             // Fill into global H and b
             H.block<3,3>(3*i, 3*i) += H_ij.block<3,3>(0,0);
@@ -188,8 +163,8 @@ namespace GN
         for (size_t j = 0; j < config_.max_iters; j++)
         {
             // Intialize empty matrix and vector
-            H = GN::dMat::Zero(3*N_, 3*N_);
-            b = GN::dVec::Zero(3*N_);
+            auto H = GN::dMat::Zero(3*N_, 3*N_);
+            auto b = GN::dVec::Zero(3*N_);
             
             // Extract the H adjancency matrix and b coefficient vector
             bool met_threshold = buildLinearHb(n, X, H, b);
@@ -203,7 +178,7 @@ namespace GN
                 // Update state vectors
                 for (size_t i = 0; i < X.size(); i++)
                 {
-                    X[i] += dx.segment<3>(3*i);
+                    X[i] += dX.segment<3>(3*i);
                 }
             } else {
                 break;
@@ -213,7 +188,7 @@ namespace GN
         // Finished
         double duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
         std::cout << "Gauss-Newton Optimization Complete!" << std::endl;
-        std::cout << std::format("Optimization took %gsecs.\n", duration);
+        std::cout << "Optimization took " << duration << "secs.\n" << std::endl;
         return true;
 
         // return false somewhere
