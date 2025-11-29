@@ -15,17 +15,17 @@ namespace GN{
         typedef Eigen::Matrix<double,3,3> Mat33;    // info matrix, transforms
         typedef Eigen::Matrix<double,3,6> Mat36;    // jacobians
 
-        typedef Eigen::VectorXd               dVec; // for b
-        typedef Eigen::MatrixXd               dMat; // for H
+        typedef Eigen::VectorXd dVec; // for b
+        typedef Eigen::MatrixXd dMat; // for H
 
         // class intialization with matricies from ICP (Z) and node vector
-        GN(const std::vector<Vec3> &Z, const std::vector<Vec3> &N);
+        GN(const std::vector<Vec3> &Z, const std::vector<Vec3> &N, const GN_Config config);
 
         struct GN_Config
         {
-            int max_i = 300;
-            double threshold = 0.5;
-            Mat33 omega;
+            int max_iters = 10;
+            Vec3 threshold = 0.5, 0.5, 1;   // x, y, theta (radians)
+            Mat33 omega = = Eigen::Matrix3d::Identity();
         }
 
         struct eJ{
@@ -34,9 +34,10 @@ namespace GN{
         }
 
         // main function to run
-        bool gnOptimizer(const std::vector Z, 
-                        cosnt std::vector<utils::Node> N, 
-                        GN_Config config);
+        bool gnOptimizer();
+                        // const std::vector Z, 
+                        // cosnt std::vector<utils::Node> N, 
+                        // GN_Config config
 
         // HELPER FUNCTIONS
 
@@ -52,13 +53,14 @@ namespace GN{
         // Build global H and b for all edges
         void buildLinearHb(const size_t n,
                         const std::vector<Vec3> &X,  
-                        const std::vector<Mat33> &Z,
+                        // const std::vector<Mat33> &Z,
                         GN::dMat &H,
                         GN::dVec &b);
 
     private:
         std::vector<Vec3> Z_;  // icp transform list
         std::vector<Vec3> N_;  // node poses list
+        GN_Config config_;
 
     }
 }

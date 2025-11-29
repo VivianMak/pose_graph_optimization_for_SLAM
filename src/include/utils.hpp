@@ -58,28 +58,31 @@ struct Pose {
 struct Node; // forward declaration - Node is referenced in edge
 
 struct Edge {
-    Node* child;                    // pointer to child node
+    Node* parent;                   // pointer to parent node
     Eigen::Matrix3d transform;      // transform matrix(3×3)
 
-    Edge(Node* child_, const Eigen::Matrix3d& T)
-        : child(child_), transform(T) {}
+    Edge(Node* parent, const Eigen::Matrix3d& T)
+        : parent(parent), transform(T) {}
 };
 
-// -------------------------
-// Node: pose + outgoing edges
-// -------------------------
 struct Node {
-    int node_id;
-    Pose pose;                       // pose of node
+    int node_id;                                     // for debugging
+    Pose pose;                                       // pose of  (x,y,theta)
     std::vector<std::unique_ptr<utils::Edge>> edges; // smart pointer for edges
 
     Node(int id, const Pose& p)
         : node_id(id), pose(p) {}
 
-    // add a new edge if closure
-    void addEdge(Node* child, const Eigen::Matrix3d& T) {
-        // nodeA->addEdge(nodeB, transform_AB)
-        edges.push_back(std::make_unique<utils::Edge>(child, T)); // add edge smart pointer to end of vector
+    void addEdge(Node* parent, const Eigen::Matrix3d& T) {
+        /*
+        * Add a new pointer to an edge 
+        * 
+        * @param parent - pointer to parent node 
+        * @param T - transformation matrix from parent node
+        */
+       
+        // EX: nodeA->addEdge(nodeB, transform_AB)
+        edges.push_back(std::make_unique<utils::Edge>(parent, T));
     }
 };
 

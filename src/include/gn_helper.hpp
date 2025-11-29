@@ -1,36 +1,27 @@
 #include <Eigen/Dense>
 #include <cmath>
 
-#include "utils.hpp"
-#include "gn_optimizer.hpp"
-
 namespace gn_helper {
 
-utils::Pose transforms_to_dvector(const GN::Vec3 xi,
-                                    const GN::Vec3 xj,
-                                    GN::Mat33& T1) 
+Eigen::Vector3d matToPose(const Eigen::Matrix3d& T)
 {
-    /*
-    * Turn two homogeneous transforms into delta vector
-    * @params T1 - from ICP
-    * @params T2 - from odom
-    */
-    
-    utils::Pose p1;
-    utils::Pose del_p2 = xi - xj;
+    Eigen::Vector3d pose;
+    pose.x() = T(0, 2);                        
+    pose.y() = T(1, 2);                       
+    pose.z() = std::atan2(T(1, 0), T(0, 0));
+    return pose;
+}
 
-    // or p1.x?
-    p1->x = T1(0, 2);
-    p1->y = T1(1, 2);
-    p1->theta = std::atan2(T1(1, 0), T1(0, 0));
+Eigen::Matrix3d poseToMat(const Eigen::Vector3d& p)
+{
+    double c = std::cos(p.z());
+    double s = std::sin(p.z());
 
-    // p2->x = T2(0, 2);
-    // p2->y = T2(1, 2);
-    // p2->theta = std::atan2(T2(1, 0), T2(0, 0));
-
-    utils::Pose delta_p = p1 - del_p2;
-
-    return delta_p;
+    Eigen::Matrix3d T;
+    T <<  c, -s, p.x(),
+          s,  c, p.y(),
+          0,  0, 1;
+    return T;
 }
 
 }
