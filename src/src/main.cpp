@@ -1,10 +1,13 @@
 #include "pose_graph.hpp"
+#include "test_structs.hpp"
 #include "utils.hpp"
 
 int main() {
 
     std::cout << "Reading robot data ..." << std::endl;
     auto [scans, odoms] = loadData("../../data/robot_data.bin");
+
+    // testStructs();
 
     // Build the pose graph
     pose_graph::PoseGraph graph;
