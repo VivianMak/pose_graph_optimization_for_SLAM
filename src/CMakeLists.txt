@@ -20,4 +20,5 @@ add_executable(main
     src/test_structs.cpp
     src/pose_graph.cpp
     # src/gn_optimizer.cpp
+    src/icp.cpp
 )

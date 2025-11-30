@@ -4,6 +4,8 @@
 
 namespace pose_graph {
 
+int STEP_SIZE = 100;
+
 PoseGraph::PoseGraph()
 {
     // Constructor with empty function, thresholds can be added later if needed.
@@ -29,7 +31,9 @@ void PoseGraph::build(const std::vector<SavedLaserScan>& scans,
     edge_indices_.clear();
 
     // Create one Node per odometry entry
-    for (std::size_t i = 0; i < odoms.size(); ++i) {
+    for (std::size_t i = 0; i < odoms.size(); i+=STEP_SIZE) {
+        // auto temp = odoms[i];
+        // std::cout << *temp << std::endl;
         utils::Pose p = odomToPose(odoms[i]);
         nodes_.push_back(std::make_unique<utils::Node>(static_cast<int>(i), p));
     }
@@ -81,9 +85,9 @@ utils::Pose PoseGraph::odomToPose(const SavedOdom& odom) const
     double siny_cosp = 2.0 * (qw * qz + qx * qy);
     double cosy_cosp = 1.0 - 2.0 * (qy * qy + qz * qz);
     double yaw_rad = std::atan2(siny_cosp, cosy_cosp);
-    double yaw_deg = yaw_rad * 180.0 / M_PI;
+    // double yaw_deg = yaw_rad * 180.0 / M_PI;
 
-    return utils::Pose(x, y, yaw_deg);
+    return utils::Pose(x, y, yaw_rad);
 }
 
 void PoseGraph::addSequentialEdges()
@@ -102,7 +106,7 @@ void PoseGraph::addSequentialEdges()
         return;
     }
 
-    for (std::size_t i = 0; i + 1 < nodes_.size(); ++i) {
+    for (std::size_t i = 0; i + 1 < nodes_.size(); i++) {
         utils::Node* parent = nodes_[i].get();
         utils::Node* child  = nodes_[i + 1].get();
 
