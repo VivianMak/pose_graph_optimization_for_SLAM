@@ -1,5 +1,7 @@
 #include <iostream>
+#include <ctime>
 #include <vector>
+#include <memory>
 #include <algorithm>
 #include <Eigen/Dense>
 
@@ -9,7 +11,17 @@
 
 namespace GN
 {
-    GN::eJ computeErrorAndJacobian(const GN::Vec3 &xi, 
+    // Constructor
+    GnOptimizer::GnOptimizer(
+        const std::vector<GN::Mat33> &Z_, 
+        const std::vector<utils::Node> &N_, 
+        const GN_Config config_
+    ){
+        // Empty
+    }
+
+    std::pair<GN::Vec3, GN::Mat36> 
+    GnOptimizer::computeErrorAndJacobian(const GN::Vec3 &xi, 
                                     const GN::Vec3 &xj, 
                                     const GN::Mat33 &z_ji)
     {
@@ -24,7 +36,7 @@ namespace GN
         */
 
         // initalize error and jacobian return struct for current adjancent nodes
-        GN::eJ currenteJ;
+        GN::Vec3 e;
 
         // Compute error
         std::cout << "---------- Computing Error ----------" << std::endl;
@@ -42,11 +54,11 @@ namespace GN
         GN::Vec3 xj_pred = gn_helper::matToPose(T_j_pred);
 
         // Build the vector error
-        currenteJ.e(0) = xj_pred(0) - xj(0);
-        currenteJ.e(1) = xj_pred(1) - xj(1);
-        currenteJ.e(2) = utils::wrap_rad(xj_pred(0) - xj(0));
+        e << xj_pred(0) - xj(0),
+            xj_pred(1) - xj(1),
+            utils::wrap_rad(xj_pred(0) - xj(0));
 
-        std::cout << "ERROR IS: " << currenteJ.e << std::endl;
+        std::cout << "ERROR IS: " << e << std::endl;
 
         // Compute Jacobian
         std::cout << "---------- Computing Jacobian ----------" << std::endl;
@@ -54,6 +66,11 @@ namespace GN
         // decpmse poses
         double xi_x = xi(0), xi_y = xi(1), xi_th = xi(2);
         double xj_x = xj(0), xj_y = xj(1), xj_th = xj(2);
+
+        // Rotation of node i
+        Eigen::Matrix2d Ri;
+        Ri << cos(xi_th),  sin(xi_th),
+            -sin(xi_th),  cos(xi_th);
 
         
         // compute jacobian
@@ -80,13 +97,11 @@ namespace GN
         // d e_theta / d xj
         J(2,5) = 1;
 
-        currenteJ.J = J;
-
-        return GN::eJ currenteJ;
+        return {e, J};
     }
 
-    void buildLinearHb(const size_t n,
-                        const std::vector<GN::Vec3> &X,  
+    bool GnOptimizer::buildLinearHb(const size_t n,
+                        const std::vector<utils::Node> &X,  
                         GN::dMat &H,
                         GN::dVec &b)
     {
@@ -103,17 +118,16 @@ namespace GN
         {
             int i = k+1;
             int j = k;
+
+            // Set poses as vectors
+            GN::Vec3 xi(X[i].pose.x, X[i].pose.y, X[i].pose.theta);
+            GN::Vec3 xj(X[j].pose.x, X[j].pose.y, X[j].pose.theta);
             
             // Get the error vec and Jacobian mat
-            GN::eJ eJ = computeErrorAndJacobian(X[i].pose, 
-                                                X[j].pose, 
-                                                Z_[k]);
+            auto [e, J] = computeErrorAndJacobian(xi, xj, Z_[k]);
 
-            GN::Vec3 e = eJ.e;
-            GN::Mat36 J = eJ.J;
-
-            // Set a threshold for error
-            if (e < config_.threshold)
+            // Set a threshold for error vec (euclidean distance)
+            if (e.norm() < config_.threshold)
             {
                 std::cout << "OPTIMIZATION MET THRESHOLD" << std::endl;
                 return true;
@@ -135,7 +149,7 @@ namespace GN
             return false;
     }
 
-    bool gnOptimizer()
+    bool GnOptimizer::gnOptimizer()
     {
         /*
         * Run the gauss newton global optimizer.
@@ -148,8 +162,7 @@ namespace GN
         */
 
         // Runtime debugger
-        std::clock_t start;
-        start = std::clock();
+        clock_t start = std::clock();
 
         std::cout << "Running Gauss-Newton Optimization..." << std::endl;
 
@@ -157,14 +170,14 @@ namespace GN
 
         // Allocate space to copy nodes in reverse order
         // We don't want to edit the nodes diretly
-        std::vector<GN::Vec3> X(N_.size());
-        std::X(N_.begin(), N_.end(), X.begin());
+        std::vector<utils::Node> X = N_;
+        std::reverse(X.begin(), X.end());
 
         for (size_t j = 0; j < config_.max_iters; j++)
         {
             // Intialize empty matrix and vector
-            auto H = GN::dMat::Zero(3*N_, 3*N_);
-            auto b = GN::dVec::Zero(3*N_);
+            GN::dMat H = GN::dMat::Zero(3*n, 3*n);
+            GN::dVec b = GN::dVec::Zero(3*n);
             
             // Extract the H adjancency matrix and b coefficient vector
             bool met_threshold = buildLinearHb(n, X, H, b);

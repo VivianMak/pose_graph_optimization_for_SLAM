@@ -29,19 +29,22 @@ add_library(icp
 target_include_directories(icp PUBLIC include)
 target_link_libraries(icp Eigen3::Eigen)
 
-# Library: test_structs
-add_library(test_structs
-    src/test_structs.cpp
-)
-target_include_directories(test_structs PUBLIC include)
-target_link_libraries(test_structs Eigen3::Eigen)
 
-# # Library: gn_optimizer
-# add_library(gn_optimizer
-#     src/gn_optimizer.cpp
+# Library: gn_optimizer
+add_library(gn_optimizer
+    src/gn_optimizer.cpp
+)
+target_include_directories(gn_optimizer PUBLIC include)
+target_link_libraries(gn_optimizer Eigen3::Eigen)
+
+######## TESTS ###########################
+# # Library: test_structs
+# add_library(test_structs
+#     src/test_structs.cpp
 # )
-# target_include_directories(gn_optimizer PUBLIC include)
-# target_link_libraries(gn_optimizer Eigen3::Eigen)
+# target_include_directories(test_structs PUBLIC include)
+# target_link_libraries(test_structs Eigen3::Eigen)
+####################################
 
 # Main program executable
 add_executable(main src/main.cpp)
@@ -49,6 +52,6 @@ target_link_libraries(main
     read_data
     pose_graph
     icp
-    test_structs
+    # test_structs
     # gn_optimizer
 )
