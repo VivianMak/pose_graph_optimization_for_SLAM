@@ -12,8 +12,8 @@
 
 namespace GN{
 
-using Vec3 = Eigen::Vector3f; // error vectors
-using Mat33 = Eigen::Matrix3f; // info matrix, transforms
+using Vec3 = Eigen::Vector3d; // error vectors
+using Mat33 = Eigen::Matrix3d; // info matrix, transforms
 using Mat36 = Eigen::Matrix<double,3,6>; // jacobians
 
 using dVec = Eigen::VectorXd; // for b
@@ -21,7 +21,7 @@ using dMat = Eigen::MatrixXd; // for H
 
 struct GN_Config{
     int max_iters;
-    float threshold;  
+    double threshold;  
     Mat33 omega; //Eigen::Matrix3d::Identity()
 };
 

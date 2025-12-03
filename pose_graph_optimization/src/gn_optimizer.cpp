@@ -186,12 +186,29 @@ namespace GN
             if (!met_threshold)
             {
                 // Solving for state delta X (x,y,theta)
-                GN::Vec3 dX = H.ldlt().solve(b);
+                Eigen::LDLT<GN::dMat> ldlt(H);
+                GN::dVec dX = ldlt.solve(b);
+
+                /////////// Debugging //////////////
+                // check linear solver
+                if (ldlt.info() != Eigen::Success) {
+                    std::cerr << "LDLT solve failed!" << std::endl;
+                    return false;
+                }
+                // check size
+                if (dX.size() != 3 * X.size()) {
+                    std::cerr << "ERROR: dX has wrong size. Expected "
+                            << 3 * X.size() << " but got " << dX.size() << std::endl;
+                    return false;
+                }
+                ////////////////////////////////////
             
                 // Update state vectors
                 for (size_t i = 0; i < X.size(); i++)
                 {
-                    X[i] += dX.segment<3>(3*i);
+                    X[i].pose.x += dX.segment<3>(3*i)(0);
+                    X[i].pose.y += dX.segment<3>(3*i)(1);
+                    X[i].pose.theta += dX.segment<3>(3*i)(2);
                 }
             } else {
                 break;
