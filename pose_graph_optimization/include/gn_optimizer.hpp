@@ -29,8 +29,10 @@ class GnOptimizer{
     public:
         
         // class intialization with matricies from ICP (Z) and node vector
-        GnOptimizer(const std::vector<Mat33> &Z_, const std::vector<utils::Node> &N_, const GN_Config config_);
-
+        GnOptimizer(
+            const std::vector<Mat33> &Z, 
+            const std::vector<utils::Node> &N, 
+            const GN_Config config);
         
 
         std::pair<GN::Vec3, GN::Mat36> 

@@ -55,3 +55,6 @@ ccache/
 ros2_ws/.vscode
 .vscode/
 venv/
+
+# --- Vivian
+test_gn/

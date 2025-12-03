@@ -57,15 +57,54 @@ struct Edge {
 
     Edge(Node* parent, const Eigen::Matrix3d& T)
         : parent(parent), transform(T) {}
+
+    // deep copy of edge
+    Edge(const Edge& other)
+        : parent(other.parent), // copy parent pointer, but not remapped
+          transform(other.transform) // copy transformation
+    {}
 };
 
 struct Node {
-    int node_id;                                     // for debugging
+    int node_id;                                     // for easy iterations
     Pose pose;                                       // pose of  (x,y,theta)
     std::vector<std::unique_ptr<utils::Edge>> edges; // smart pointer for edges
 
     Node(int id, const Pose& p)
         : node_id(id), pose(p) {}
+
+    // deep copy of node
+    Node(const Node& other)
+        : node_id(other.node_id),
+          pose(other.pose)
+    {
+        // prevent reallocation during push back
+        edges.reserve(other.edges.size());
+        // clone edges in vector
+        for (const auto& e : other.edges) {
+            edges.push_back(std::make_unique<Edge>(*e)); // deep copy
+        }
+    }
+
+    Node& operator=(const Node& other)
+    {
+        // guard self-assignment
+        if (this == &other) 
+            return *this;
+        
+        // repopulate fields
+        node_id = other.node_id;
+        pose = other.pose;
+
+        // clear existing edges
+        edges.clear();
+        edges.reserve(other.edges.size());
+        // edge parent pointers still point to OLD nodes
+        for (const auto& e : other.edges) {
+            edges.push_back(std::make_unique<Edge>(*e));
+        }
+        return *this;
+    }
 
     void addEdge(Node* parent, const Eigen::Matrix3d& T) {
         /*

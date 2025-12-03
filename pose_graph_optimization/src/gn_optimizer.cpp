@@ -13,10 +13,11 @@ namespace GN
 {
     // Constructor
     GnOptimizer::GnOptimizer(
-        const std::vector<GN::Mat33> &Z_, 
-        const std::vector<utils::Node> &N_, 
-        const GN_Config config_
-    ){
+        const std::vector<GN::Mat33> &Z, 
+        const std::vector<utils::Node> &N, 
+        const GN::GN_Config config)
+        : Z_(Z), N_(N), config_(config)
+    {
         // Empty
     }
 
@@ -224,6 +225,8 @@ namespace GN
         // return false somewhere
 
     }
+
+
 
     
 }
