@@ -13,12 +13,31 @@ namespace GN
 {
     // Constructor
     GnOptimizer::GnOptimizer(
-        const std::vector<GN::Mat33> &Z, 
-        const std::vector<utils::Node> &N, 
+        const std::vector<std::unique_ptr<GN::Mat33>> &Z,
+        const std::vector<std::unique_ptr<utils::Node>> &N,
         const GN::GN_Config config)
-        : Z_(Z), N_(N), config_(config)
+        : config_(config)
     {
-        // Empty
+        /*
+         * UNIQUE_PTR CHANGE:
+         *  - We can’t copy unique_ptr directly (copying is forbidden).
+         *  - So we manually deep-copy the pointed-to objects into Z_ and N_.
+         */
+
+        // Deep copy each Mat33
+        Z_.reserve(Z.size());
+        for (const auto &ptr : Z)
+        {
+            // Copy the underlying matrix into our owned vector
+            Z_.push_back(*ptr);   // dereference unique_ptr → Mat33 copy
+        }
+
+        // Deep copy each Node
+        N_.reserve(N.size());
+        for (const auto &ptr : N)
+        {
+            N_.push_back(*ptr);   // dereference → copy Node
+        }
     }
 
     std::pair<GN::Vec3, GN::Mat36> 
@@ -33,7 +52,7 @@ namespace GN
         * @param xj - jth pose (current)
         * @param zji - icp transform btwn ij (3x3)
         * 
-        * @return eJ - error vec and Jacobian mat
+        * @return e, J - error vec and Jacobian mat
         */
 
         // initalize error and jacobian return struct for current adjancent nodes

@@ -51,7 +51,7 @@ int main() {
 
 
     // Fake Z_ test data (3 matrices)
-    std::vector<GN::Mat33> Z_test;
+    std::vector<std::unique_ptr<GN::Mat33>> Z_test;
 
     GN::Mat33 T1;
     T1 << 1, 0, 1,
@@ -69,9 +69,12 @@ int main() {
         0,          0,          1;
 
     // Push into vector
-    Z_test.push_back(T1);
-    Z_test.push_back(T2);
-    Z_test.push_back(T3);
+    // Z_test.push_back(T1);
+    // Z_test.push_back(T2);
+    // Z_test.push_back(T3);
+    Z_test.push_back(std::make_unique<GN::Mat33>(T1));
+    Z_test.push_back(std::make_unique<GN::Mat33>(T2));
+    Z_test.push_back(std::make_unique<GN::Mat33>(T3));
 
     // GLOBAL OPTIMIZATION
 

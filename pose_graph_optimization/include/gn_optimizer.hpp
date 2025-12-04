@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 #include <iostream>
+#include <memory>
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 
@@ -30,9 +31,9 @@ class GnOptimizer{
         
         // class intialization with matricies from ICP (Z) and node vector
         GnOptimizer(
-            const std::vector<Mat33> &Z, 
-            const std::vector<utils::Node> &N, 
-            const GN_Config config);
+            const std::vector<std::unique_ptr<GN::Mat33>> &Z,
+            const std::vector<std::unique_ptr<utils::Node>> &N,
+            const GN::GN_Config config);
         
 
         std::pair<GN::Vec3, GN::Mat36> 

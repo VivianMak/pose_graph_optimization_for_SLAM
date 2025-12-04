@@ -53,5 +53,5 @@ target_link_libraries(main
     pose_graph
     icp
     # test_structs
-    # gn_optimizer
+    gn_optimizer
 )
