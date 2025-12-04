@@ -8,18 +8,22 @@ Focusing on pose graph optimization for SLAM.
 - add iostream to libraries
 - add cmath to libraries
 - the algorithm > pose graph
+- COMPETENCY
 
 ## Mo
 - the algorithm > gathering sim data
 - the algorithm > transformation with icp
 - turn icp matrices into unique pointers
 - put function and output in main.cpp
+- COMTEPETNS
 
 
 ## Vivian
 - the algorithm > gausnewton
 - debug optimizer after icp
 - - auto run test files after building? (add_test for cmake command)
+- COMPAEFH
+
 
 - " allowing the CPU to fetch multiple pieces of data in a single cache line, leading to faster access times, only one pointer per struct,"
 
