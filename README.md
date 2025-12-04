@@ -1,7 +1,11 @@
 # Pose Graph Optimization for SLAM
-### Software Systems Course Project | Members: Allan, Mo, Vivian
+> #### Software Systems Course Project | Members: Allan, Mo, Vivian
 
-Focusing on pose graph optimization for SLAM.
+## Overview
+- 2.5D
+- Focusing on pose graph optimization for SLAM.
+- wanted to implement ourselves and learn the math
+
 
 # TODO
 ## Allan
@@ -50,6 +54,15 @@ Project/
     └── # visualizations in python
 ```
 
+## How to Run
+```bash
+$ cd pose_graph_optimization
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+$ ./main
+```
 
 ## The Algorithm
 
@@ -72,8 +85,95 @@ struct Node{};    // node-id, Pose, edges
 ### Transformations with ICP
 TODO
 
-### Gaus-Newton Global Optimization
-TODO
+### Gauss-Newton Global Optimization
+
+The Gauss-Newton iterative algorithm is used to solve a non-linear least squares problem with the pose graph optimization. This algorithm aims to back-propagate the known but noisy relative pose measurements (position and orientation) to find a set of consistent "real" pose. This works by looking at the laser scan recorded at each timestep as a source of truth, and iteratively minimizing the error of overlapped points globally until some convergence.
+
+**High Level Steps**
+1. Derive Error Function
+2. Linearize Error Function
+3. Compute Derivatives
+4. Solve Linear System
+5. Iterate Until Convergence
+
+```cpp
+// Psuedocode
+optimize(x) {
+  while(!converged){
+    H,b = buildLinearHb(x);
+    delta_x = solveLinearSystem(H(delta_x) = -b);
+    X_ = x + delta_x
+  }
+  return X_
+}
+```
+
+**Gauss-Newton Algorithm**
+
+**Goal**: solve for $\Delta$ x to apply over all state nodes
+
+The linearized system is:
+
+$$
+H \, \Delta x = -b
+$$
+
+where:
+
+$$
+H = J^\top \, \Omega \, J \\
+b = - J^\top \, \Omega \, e \\
+\Omega \in \mathbb{R}^{3 \times 3} \text{ is the information matrix encoding the uncertainty in } (x, y, \theta).
+$$
+
+
+First, we have to define the error function and compute for each adjacent node. Assuming we have two consecutive robot poses $p_i = (x_i, y_i, \theta _i)$, $p_j = (x_i, y_i, \theta_i)$, and a $3x3$ relative transform $z_{ij}$ from the previous step, ICP, we can generalize the error vector with the following equation.
+
+$$
+e = [e_x, e_y, e_{\theta}]^\mathsf{T}
+$$
+
+Breaking it down:
+$$
+\begin{aligned}
+e_{translation} &= [e_x, e_y]^\mathsf{T} = R(\theta_i)(p_{j,trans} - p_{i,trans}) - [z_x, z_y]^\mathsf{T} \\
+&= \text{[}\cos(\theta_i)\Delta x + \sin(\theta_i)\Delta y - z_x \text{,  }
+-\sin(\theta_i)\Delta x + \cos(\theta_i)\Delta y - z_y \text{]}^\mathsf{T} \\
+\\
+e_{\theta} &= (\theta_j - \theta_i) - z_{\theta}
+\end{aligned}
+$$
+
+
+
+**Code Structure**
+```cpp
+// gn_optimizer.hpp
+GnOptimizer(
+  const std::vector<std::unique_ptr<GN::Mat33>> &Z,
+  const std::vector<std::unique_ptr<utils::Node>> &N,
+  const GN::GN_Config config
+);    // constructor
+
+error, Jacobian = computeErrorAndJacobian(
+  // Find the error and Jacobian matrix for each adjacent node
+); 
+
+H, b = buildLinearHb(
+  // Starts with an empty H matrix and b vector
+  // Calls computeErrorAndJacobian() until H,b is populated
+);
+
+bool isOptimized = gnOptimizer(
+  // Until some iteration or threshold,
+  // Solve H(delta_x) = -b
+  // Apply delta_x to all nodes
+);
+
+return X_;    // optimized nodes
+```
+
+
 
 ## Course Competencies
 
@@ -92,10 +192,11 @@ Eigen Libary: https://libeigen.gitlab.io/
 
 The Eigen library is a high-level C++ library of template headers for linear algebra, matrix and vector operations, geometrical transformations, numerical solvers and related algorithms. The library was extremely useful for all parts of the algorithm since 3x3 homogenous transforms was a big part of geneating a pose graph. The Gaus-Newton Global Optimization heaivly utilized the libary with the complex math. In the documentation this page (https://libeigen.gitlab.io/eigen/docs-5.0/group__TutorialMatrixClass.html) was the most useful. It explained how to initalize matrices of the sizes we want, either pre-allocation or dynamically. The most challening part was finding what we actually needed with the library. It offers a lot of functions, but we just need basic matrix multiplication and intialization. I came to an understanding of the library once I saw how another project implemented its fucnctions like `Eigen::Sucess`. (Gaus-Newton Repo: https://github.com/milkpku/IGsolver/tree/master)
 
+Libary: Link
+
 
 ### Debugging (sw.debug): (allan)
 
-- When converting objects to 
 
 ```
 - How you found that there was a bug (What aspects of the code's behavior
