@@ -125,7 +125,7 @@ namespace GN
     }
 
     bool GnOptimizer::buildLinearHb(const size_t n,
-                        const std::vector<utils::Node> &X,  
+                        // const std::vector<utils::Node> &X,  
                         GN::dMat &H,
                         GN::dVec &b)
     {
@@ -144,8 +144,8 @@ namespace GN
             int j = k;
 
             // Set poses as vectors
-            GN::Vec3 xi(X[i].pose.x, X[i].pose.y, X[i].pose.theta);
-            GN::Vec3 xj(X[j].pose.x, X[j].pose.y, X[j].pose.theta);
+            GN::Vec3 xi(X_[i].pose.x, X_[i].pose.y, X_[i].pose.theta);
+            GN::Vec3 xj(X_[j].pose.x, X_[j].pose.y, X_[j].pose.theta);
             
             // Get the error vec and Jacobian mat
             auto [e, J] = computeErrorAndJacobian(xi, xj, Z_[k]);
@@ -204,7 +204,7 @@ namespace GN
             GN::dVec b = GN::dVec::Zero(3*n);
             
             // Extract the H adjancency matrix and b coefficient vector
-            bool met_threshold = buildLinearHb(n, X, H, b);
+            bool met_threshold = buildLinearHb(n, H, b);
 
             // Checking for convergence
             if (!met_threshold)
@@ -216,23 +216,23 @@ namespace GN
                 /////////// Debugging //////////////
                 // check linear solver
                 if (ldlt.info() != Eigen::Success) {
-                    std::cerr << "LDLT solve failed!" << std::endl;
+                    std::cerr << "LDLT solve failed :(" << std::endl;
                     return false;
                 }
                 // check size
-                if (dX.size() != 3 * X.size()) {
+                if (dX.size() != 3 * X_.size()) {
                     std::cerr << "ERROR: dX has wrong size. Expected "
-                            << 3 * X.size() << " but got " << dX.size() << std::endl;
+                            << 3 * X_.size() << " but got " << dX.size() << std::endl;
                     return false;
                 }
                 ////////////////////////////////////
             
                 // Update state vectors
-                for (size_t i = 0; i < X.size(); i++)
+                for (size_t i = 0; i < X_.size(); i++)
                 {
-                    X[i].pose.x += dX.segment<3>(3*i)(0);
-                    X[i].pose.y += dX.segment<3>(3*i)(1);
-                    X[i].pose.theta += dX.segment<3>(3*i)(2);
+                    X_[i].pose.x += dX.segment<3>(3*i)(0);
+                    X_[i].pose.y += dX.segment<3>(3*i)(1);
+                    X_[i].pose.theta += dX.segment<3>(3*i)(2);
                 }
             } else {
                 break;

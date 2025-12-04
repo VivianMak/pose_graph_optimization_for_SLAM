@@ -42,18 +42,21 @@ class GnOptimizer{
                                 const Mat33 &z_ij);
 
         bool buildLinearHb(const size_t n,
-                        const std::vector<utils::Node> &X,  
+                        // const std::vector<utils::Node> &X,  
                         dMat &H,
                         dVec &b);
 
         // main function to run
         bool gnOptimizer();   
 
+        const std::vector<utils::Node>& getX() const { return X_; }
+
     private:
         std::vector<Mat33> Z_;  // icp transform list
         std::vector<utils::Node> N_;  // node poses list
         GN_Config config_;     // config parameters for optimization
 
+        std::vector<utils::Node> X_;
     };
 }
 #endif // GN_H

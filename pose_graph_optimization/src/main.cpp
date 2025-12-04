@@ -20,10 +20,10 @@ int main() {
     std::cout << "\nBuilding pose graph ..." << std::endl;
 
     // Inspect the graph thru terminal
-    const auto& nodes = graph.nodes();
+    const auto& fnodes = graph.nodes();
     const auto& edges = graph.edgeIndices();
 
-    std::cout << "Created nodes: " << nodes.size() << "\n";
+    std::cout << "Created nodes: " << fnodes.size() << "\n";
     std::cout << "Created edges: " << edges.size() << "\n\n";
 
     // print first few nodes
@@ -68,13 +68,26 @@ int main() {
         sin(-1.2),  cos(-1.2),  1.5,
         0,          0,          1;
 
-    // Push into vector
-    // Z_test.push_back(T1);
-    // Z_test.push_back(T2);
-    // Z_test.push_back(T3);
     Z_test.push_back(std::make_unique<GN::Mat33>(T1));
     Z_test.push_back(std::make_unique<GN::Mat33>(T2));
     Z_test.push_back(std::make_unique<GN::Mat33>(T3));
+
+    // Fake nodes test data (3 nodes)
+    std::vector<std::unique_ptr<utils::Node>> nodes;
+
+    // Assume Pose has a constructor Pose(x, y, theta)
+    utils::Pose p1(0.0, 0.0, 0.0);
+    utils::Pose p2(1.0, 2.0, 0.5);
+    utils::Pose p3(-1.0, 1.5, -0.7);
+
+    // Create nodes and push into vector
+    nodes.push_back(std::make_unique<utils::Node>(0, p1));
+    nodes.push_back(std::make_unique<utils::Node>(1, p2));
+    nodes.push_back(std::make_unique<utils::Node>(2, p3));
+
+    // Optionally, add edges if needed
+    nodes[1]->addEdge(nodes[0].get(), *Z_test[0]);  // node1 -> node0
+    nodes[2]->addEdge(nodes[1].get(), *Z_test[1]);  // node2 -> node1
 
     // GLOBAL OPTIMIZATION
 
@@ -90,6 +103,7 @@ int main() {
 
     if(isOptimized){
         std::cout << "IS OPTIMIZED FINISHED\n";
+        const auto& resultX = gn.getX();
         // Comparison of nodes before v after global optimization
         // for (size_t i = 0; i < N_.size(); i++) {
         //     double dx = N_[i].pose.x - X[i].pose.x;
