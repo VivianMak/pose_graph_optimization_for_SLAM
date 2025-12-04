@@ -38,6 +38,10 @@ namespace GN
         {
             N_.push_back(*ptr);   // dereference → copy Node
         }
+
+        // Initalize copy of nodes backwards
+        X_ = N_;
+        std::reverse(X_.begin(), X_.end());
     }
 
     std::pair<GN::Vec3, GN::Mat36> 
@@ -190,8 +194,8 @@ namespace GN
 
         // Allocate space to copy nodes in reverse order
         // We don't want to edit the nodes diretly
-        std::vector<utils::Node> X = N_;
-        std::reverse(X.begin(), X.end());
+        // std::vector<utils::Node> X = N_;
+        // std::reverse(X.begin(), X.end());
 
         for (size_t j = 0; j < config_.max_iters; j++)
         {
