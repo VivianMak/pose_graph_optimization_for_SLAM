@@ -66,10 +66,10 @@ $ ./main
 
 ## The Algorithm
 
-### Gathering Simulation Data
+### 1. Gathering Simulation Data
 TODO
 
-### Constructing the Pose Graph
+### 2. Constructing the Pose Graph
 TODO
 
 Stucts:
@@ -82,19 +82,20 @@ struct Edge{};    // *parent,transform
 struct Node{};    // node-id, Pose, edges
 ```
 
-### Transformations with ICP
+### 3. Transformations with ICP
 TODO
 
-### Gauss-Newton Global Optimization
+### 4. Gauss-Newton Global Optimization
 
 The Gauss-Newton iterative algorithm is used to solve a non-linear least squares problem with the pose graph optimization. This algorithm aims to back-propagate the known but noisy relative pose measurements (position and orientation) to find a set of consistent "real" pose. This works by looking at the laser scan recorded at each timestep as a source of truth, and iteratively minimizing the error of overlapped points globally until some convergence.
 
 **High Level Steps**
 1. Derive Error Function
 2. Linearize Error Function
-3. Compute Derivatives
-4. Solve Linear System
-5. Iterate Until Convergence
+3. Set Function to Zero
+4. Compute Derivatives
+5. Solve Linear System
+6. Iterate Until Convergence
 
 ```cpp
 // Psuedocode
@@ -122,12 +123,16 @@ where:
 
 $$
 H = J^\top \, \Omega \, J \\
+$$
+$$
 b = - J^\top \, \Omega \, e \\
+$$
+$$
 \Omega \in \mathbb{R}^{3 \times 3} \text{ is the information matrix encoding the uncertainty in } (x, y, \theta).
 $$
 
 
-First, we have to define the error function and compute for each adjacent node. Assuming we have two consecutive robot poses $p_i = (x_i, y_i, \theta _i)$, $p_j = (x_i, y_i, \theta_i)$, and a $3x3$ relative transform $z_{ij}$ from the previous step, ICP, we can generalize the error vector with the following equation.
+First, we have to define the error function and compute for each adjacent node. Assuming we have two consecutive robot poses $p_i = (x_i, y_i, \theta _i)$, $p_j = (x_i, y_i, \theta_i)$, and a $3x3$ relative transform $z_{ij}$ from the previous step, ICP, we can generalize the error vector ```e_{ij} = t2v(z_{ij}(x_i, y_i))``` with the following equation.
 
 $$
 e = [e_x, e_y, e_{\theta}]^\mathsf{T}
@@ -144,7 +149,18 @@ e_{\theta} &= (\theta_j - \theta_i) - z_{\theta}
 \end{aligned}
 $$
 
+Now, we want to perform a linearization (first Tyalor expansion) around the currest estimate of x. Since the residual error depends on the rotation $R(\theta_i)$ which is a non-linear function accounted for by this method of optimization.
 
+The objective is to minimize the errors:
+
+Taking a first-order Taylor expansion around x:
+
+Plugging into squared error objective
+
+Differentiate w.r.t. $\Delta$ x and set to zero:
+
+
+The Jacobian in this context represents the ... In
 
 **Code Structure**
 ```cpp

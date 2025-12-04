@@ -68,6 +68,7 @@ struct Edge {
 struct Node {
     int node_id;                                     // for easy iterations
     Pose pose;                                       // pose of  (x,y,theta)
+    // TODO: add lidar scans
     std::vector<std::unique_ptr<utils::Edge>> edges; // smart pointer for edges
 
     Node(int id, const Pose& p)
