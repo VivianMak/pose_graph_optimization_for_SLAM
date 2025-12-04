@@ -50,44 +50,44 @@ int main() {
 
 
 
-    // Fake Z_ test data (3 matrices)
+    // // Fake Z_ test data (3 matrices)
     std::vector<std::unique_ptr<GN::Mat33>> Z_test;
 
-    GN::Mat33 T1;
-    T1 << 1, 0, 1,
-        0, 1, 2,
-        0, 0, 1;
+    // GN::Mat33 T1;
+    // T1 << 1, 0, 1,
+    //     0, 1, 2,
+    //     0, 0, 1;
 
-    GN::Mat33 T2;
-    T2 << cos(0.5), -sin(0.5), 0.3,
-        sin(0.5),  cos(0.5), 0.7,
-        0,         0,        1;
+    // GN::Mat33 T2;
+    // T2 << cos(0.5), -sin(0.5), 0.3,
+    //     sin(0.5),  cos(0.5), 0.7,
+    //     0,         0,        1;
 
-    GN::Mat33 T3;
-    T3 << cos(-1.2), -sin(-1.2), -0.8,
-        sin(-1.2),  cos(-1.2),  1.5,
-        0,          0,          1;
+    // GN::Mat33 T3;
+    // T3 << cos(-1.2), -sin(-1.2), -0.8,
+    //     sin(-1.2),  cos(-1.2),  1.5,
+    //     0,          0,          1;
 
-    Z_test.push_back(std::make_unique<GN::Mat33>(T1));
-    Z_test.push_back(std::make_unique<GN::Mat33>(T2));
-    Z_test.push_back(std::make_unique<GN::Mat33>(T3));
+    // Z_test.push_back(std::make_unique<GN::Mat33>(T1));
+    // Z_test.push_back(std::make_unique<GN::Mat33>(T2));
+    // Z_test.push_back(std::make_unique<GN::Mat33>(T3));
 
-    // Fake nodes test data (3 nodes)
-    std::vector<std::unique_ptr<utils::Node>> nodes;
+    // // Fake nodes test data (3 nodes)
+    // std::vector<std::unique_ptr<utils::Node>> nodes;
 
-    // Assume Pose has a constructor Pose(x, y, theta)
-    utils::Pose p1(0.0, 0.0, 0.0);
-    utils::Pose p2(1.0, 2.0, 0.5);
-    utils::Pose p3(-1.0, 1.5, -0.7);
+    // // Assume Pose has a constructor Pose(x, y, theta)
+    // utils::Pose p1(0.0, 0.0, 0.0);
+    // utils::Pose p2(1.0, 2.0, 0.5);
+    // utils::Pose p3(-1.0, 1.5, -0.7);
 
-    // Create nodes and push into vector
-    nodes.push_back(std::make_unique<utils::Node>(0, p1));
-    nodes.push_back(std::make_unique<utils::Node>(1, p2));
-    nodes.push_back(std::make_unique<utils::Node>(2, p3));
+    // // Create nodes and push into vector
+    // nodes.push_back(std::make_unique<utils::Node>(0, p1));
+    // nodes.push_back(std::make_unique<utils::Node>(1, p2));
+    // nodes.push_back(std::make_unique<utils::Node>(2, p3));
 
-    // Optionally, add edges if needed
-    nodes[1]->addEdge(nodes[0].get(), *Z_test[0]);  // node1 -> node0
-    nodes[2]->addEdge(nodes[1].get(), *Z_test[1]);  // node2 -> node1
+    // // Optionally, add edges if needed
+    // nodes[1]->addEdge(nodes[0].get(), *Z_test[0]);  // node1 -> node0
+    // nodes[2]->addEdge(nodes[1].get(), *Z_test[1]);  // node2 -> node1
 
     // GLOBAL OPTIMIZATION
 
