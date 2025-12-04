@@ -19,8 +19,9 @@ Focusing on pose graph optimization for SLAM.
 ## Vivian
 - the algorithm > gausnewton
 - debug optimizer after icp
+- - auto run test files after building? (add_test for cmake command)
 
-
+- " allowing the CPU to fetch multiple pieces of data in a single cache line, leading to faster access times, only one pointer per struct,"
 
 
 ## Repo Structure
