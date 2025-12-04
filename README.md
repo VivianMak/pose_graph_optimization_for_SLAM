@@ -66,23 +66,8 @@ TODO
 
 Eigen Libary: https://libeigen.gitlab.io/
 
-The Eigen library is a high-level C++ library of template headers for linear algebra, matrix and vector operations, geometrical transformations, numerical solvers and related algorithms. The library was extremely useful for all parts of the algorithm since 3x3 homogenous transforms was a big part of geneating a pose graph. The Gaus-Newton Global Optimization heaivly utilized the libary with the complex math.
+The Eigen library is a high-level C++ library of template headers for linear algebra, matrix and vector operations, geometrical transformations, numerical solvers and related algorithms. The library was extremely useful for all parts of the algorithm since 3x3 homogenous transforms was a big part of geneating a pose graph. The Gaus-Newton Global Optimization heaivly utilized the libary with the complex math. In the documentation this page (https://libeigen.gitlab.io/eigen/docs-5.0/group__TutorialMatrixClass.html) was the most useful. It explained how to initalize matrices of the sizes we want, either pre-allocation or dynamically. The most challening part was finding what we actually needed with the library. It offers a lot of functions, but we just need basic matrix multiplication and intialization. I came to an understanding of the library once I saw how another project implemented its fucnctions like `Eigen::Sucess`. (Gaus-Newton Repo: https://github.com/milkpku/IGsolver/tree/master)
 
-```
-- An overview about what the library does overall (What functionality does the
-  ncurses library provide?)
-- How the library was useful to your project (In what ways did the `zlib`
-  library help your project do what it does?)
-- What pages from the library you referenced while implementing your project
-  (Which of the Criterion documentation pages did you use often?)
-- What was helpful in the documentation pages you used (What specific parts of
-  the `sqlite` documentation pages were most helpful as you implemented your
-  project?)
-- Difficulties you faced while reading documentation for the library and what
-  you did about it (What pages in the SDL documentation were difficult to
-  understand as you did your project? Why was the process difficult? How did you
-  overcome those difficulties?)
-```
 
 ### Debugging (sw.debug):
 
