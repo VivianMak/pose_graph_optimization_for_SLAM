@@ -1,11 +1,59 @@
 # Pose Graph Optimization for SLAM
+### Software Systems Course Project | Members: Allan, Mo, Vivian
 
-Optimizing pose graph optimization for SLAM
+Focusing on pose graph optimization for SLAM.
 
+## Repo Structure
+**Additional Libararies / Files:**
+- Nanoflann (insert link) point to header file we need to include
+- Eigen: https://libeigen.gitlab.io/
+
+```
+Project/
+├── data/
+├── pose_graph_optimization/
+│   ├── include/
+│   │   ├── # Header (.hpp) files for src/ implementations
+│   │   └── # Included nanoflann.hpp from other repo
+│   ├── src/
+│   │   ├── main.cpp
+│   │   └── # Implmentation files
+│   └── CMakeLists.txt
+├── test/
+│   └── unit_tests.cpp
+└── visualization/
+    └── # visualizations in python
+```
+
+
+## The Algorithm
+
+### Gathering Simulation Data
+TODO
+
+### Constructing the Pose Graph
+TODO
+
+Stucts:
+```cpp
+include/utils.hpp
+
+struct Point{};   // x,y,index,r
+struct Pose{};    // x,y,theta
+struct Edge{};    // *parent,transform
+struct Node{};    // node-id, Pose, edges
+
+```
+
+### Transformations with ICP
+TODO
+
+### Gaus-Newton Global Optimization
+TODO
 
 ## Course Competencies
 
-Overview:
+**Overview:**
 1. External Libraries (sw.lib)
 2. Debugging (sw.debug)
 3. Build Systems (sw.build)
@@ -14,8 +62,13 @@ Overview:
 6. OS Concepts and Inter-Process Communications (comm.os)
 
 
-External Libraries (sw.lib):
+### External Libraries (sw.lib):
 
+Eigen Libary: https://libeigen.gitlab.io/
+
+The Eigen library is a high-level C++ library of template headers for linear algebra, matrix and vector operations, geometrical transformations, numerical solvers and related algorithms. The library was extremely useful for all parts of the algorithm since 3x3 homogenous transforms was a big part of geneating a pose graph. The Gaus-Newton Global Optimization heaivly utilized the libary with the complex math.
+
+```
 - An overview about what the library does overall (What functionality does the
   ncurses library provide?)
 - How the library was useful to your project (In what ways did the `zlib`
@@ -29,10 +82,11 @@ External Libraries (sw.lib):
   you did about it (What pages in the SDL documentation were difficult to
   understand as you did your project? Why was the process difficult? How did you
   overcome those difficulties?)
+```
 
+### Debugging (sw.debug):
 
-Debugging (sw.debug):
-
+```
 - How you found that there was a bug (What aspects of the code's behavior
   indicated that there was a bug?)
 - What behavior you expected from the code (What was the code supposed to do?)
@@ -43,10 +97,12 @@ Debugging (sw.debug):
   through?)
 - If you used GDB, what you examined in GDB to debug the code (What variables or
   memory did you examine and why? What functions did you step into?)
+```
+
+### Build Systems (sw.build):
 
 
-Build Systems (sw.build):
-
+```
 - How you organized your project into specific components/files (What does each
   component do? What functionality does `redirect.c` handle?)
 - Why you organized your project components/files in the way that you did
@@ -55,19 +111,22 @@ Build Systems (sw.build):
 - Why you selected the build configuration or options that you did
 - Build options or configurations specific to the architecture yoou
 - Challenges you faced in linking an external library, and how you overcame them
+```
+
+### Performance Bottlenecks (perf.bn):
 
 
-Performance Bottlenecks (perf.bn):
-
+```
 - Potential performance issues in your program (What parts of the program run
   slower than expected?)
 - What specific functions are called often in your program
 - Memory leaks that you found and/or fixed in your program
 - Potential ways to speed up the execution of your program
+```
 
-Data/Program Representation for Performance (perf.rep):
+### Data/Program Representation for Performance (perf.rep):
 - TODO
 
 
-OS Concepts and Inter-Process Communications (comm.os):
+### OS Concepts and Inter-Process Communications (comm.os):
 - TODO
