@@ -10,10 +10,6 @@ The goal of the optimization is to correct a robot’s estimated trajectory by e
 
 For simplicity, the problem is constrained to a 2.5D world, meaning the robot moves on a plane but still maintains a full orientation (x, y, θ). This reduces complexity while preserving the essential structure of real-world pose graph optimization problems.
 
-## TODO
-## Allan
-- COMPETENCY
-
 ## Vivian
 - the algorithm > gausnewton
 - debug optimizer after icp
@@ -298,28 +294,16 @@ The Eigen library is a high-level C++ template library for linear algebra, matri
 
 iostream Library: https://en.cppreference.com/w/cpp/header/iostream.html
 
-The `<iostream>` library is part of the C++ Standard Library and provides stream-based input and output utilities such as `std::cout`, `std::cerr`, and `std::endl`. These tools were essential for printing intermediate results, the graph-building progress, and debugging information throughout the construction of the pose graph. In the pose graph implementation, `<iostream>` was primarily used in the build() function and in testing from main.cpp to output the number of nodes added, display connectivity information, and trace computation steps during development. The most frequently used components of `<iostream>` were `std::cout`, which allowed us to print the number of nodes added, display intermediate pose values, and trace how edges were formed. Although `<iostream>` is a basic library, it played an important role in validating the correctness of the pose graph construction, especially when ensuring that node sequences, transform generation, and edge connections behaved as expected. During our early development stages, nearly all verification/debugging of pose graph behavior relied on this library.
+The `<iostream>` library is part of the C++ Standard Library and provides stream-based input and output utilties such as `std::cout`, `std::cerr`, and `std::endl`. These tools were essential for printing intermediate results, the graph-building progress, and debugging information throughout the construction of the pose graph. In the pose graph implementation, `<iostream>` was primarily used in the build() function and in testing from main.cpp to output the number of nodes added, display connectivity information, and trace computation steps during development. The most frequently used components of `<iostream>` were `std::cout`, which allows us to print the nuber of nodes added, display intermediate pose values, and trace how edges were formed. Although `<iostream>` is a basic library, it played an important role in validating the correctness of the pose graph construction, especially when ensuring that node sequences, transform generation, and edge connections behaved as expected. During our early development stages, nearly all verification/debugging of pose graph behavior relied on this library.
 
 cmath Library: https://en.cppreference.com/w/cpp/header/cmath.html
 
-The `<cmath>` library provides the mathematical functions commonly used in geometric computation. It was particularly helpful in the pose graph implementation for handling angle conversions and trigonometric operations required to build the 3×3 homogeneous transform matrices. Within the pose graph code, `<cmath>` is used in the `odomToPose()` and `addSequentialEdges()` functions. For example, the `std::atan2()` function was used to extract yaw from an odometry quaternion representation, while `std::cos()` and `std::sin()` were used when constructing the rotation components of the homogeneous transform matrix in each edge. Constants such as `M_PI` were also used for converting between radians and degrees. These mathematical utilities were necessary for computing relative pose differences and accurately representing rigid-body transformations between nodes. Without `<cmath>`, implementing these trigonometric calculations would require writing custom math functions, which would be unnecessary, annoying, and error-prone. The library provided a reliable and efficient foundation for all angle and rotation-related computations in the pose graph.
+The `<cmath>` library provides the mathematical functions commonly used in geometric computation. It was particularly helpful in the pose graph implementation for handling angle conversions and trignometric operations required to build the 3×3 homogeneous transform matrices. Within the pose graph code, `<cmath>` is used in the `odomToPose()` and `addSequentialEdges()` functions. For example, the `std::atan2()` function was used to extract yaw from an odometry quaternion representation, while `std::cos()` and `std::sin()` were used when constructing the rotation components of the homogeneous transform matrix in each edge. Constants such as `M_PI` were also used for converting between radians and degrees. These matheatical utilities were necessary for computing relative pose differences and accurately representing rigid-body transformations between nodes. Without `<cmath>`, implementing these trigonometric calculations would require writing custom math functions, which would be unnecessary, annoying, and error-prone. The library provided a reliable and efficient foundation for all angle and rotation-related computations in the pose graph.
 
 
 ### Debugging (sw.debug): (allan)
 
-
-```
-- How you found that there was a bug (What aspects of the code's behavior
-  indicated that there was a bug?)
-- What behavior you expected from the code (What was the code supposed to do?)
-- What steps you took to find the bug (How did you identify what part of the
-  code the bug was in? What tests did you run?)
-- What information you looked for during debugging (Which variables' values did
-  you print while trying to find the bug? What functions' code did you trace
-  through?)
-- If you used GDB, what you examined in GDB to debug the code (What variables or
-  memory did you examine and why? What functions did you step into?)
-```
+While debugging the pose_graph module, we first noticed that the number of sequential edges did not match the number of nodes, so we printed the computed $\Delta x$, $\Delta y$, and $\Delta\theta$ values and discovered a degrees to radians mismatch in the transform calculation. We also saw unexpected curvature in the trajectory, which led us to trace the quaternion to yaw conversion by printing intermediate ```atan2()``` values and identifying an issue with angle wrapping. Another bug appeared when certain edge index pairs were missing, and printing each ```(i, i+1)``` pair showed that stale nodes were not being cleared before rebuilding the graph. When we were debugging ICP, there was a lot of matrix multiplication involved and some functions required specific matrix sizes, so we printed matrix dimensions to verify correctness. During copilation, the warnings and errors helped identify which lines of code were failing, and we would trace those issues to determine whether the error was caused by that specific line or by incorrect variable initialization or usage somewhere else in the program. Across all components, printing key variables and using compiler feedback was the most effective way to isolate unexpected behavior and confirm that the system was operating as intended.
 
 ### Build Systems (sw.build):
 
