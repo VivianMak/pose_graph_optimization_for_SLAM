@@ -285,9 +285,9 @@ Libary: Link
 ```
 
 ### Data/Program Representation for Performance (perf.rep): (Mo)
-- " allowing the CPU to fetch multiple pieces of data in a single cache line, leading to faster access times, only one pointer per struct,"
-- eigen matrices instead of vector of vectors
+To optimize the performance of our algorithm we used structs so the fields would be stored in contiguous memory. For example, by using Eigen matrices instead of vectors of vectors of doubles, because the contents of Eigen matrices are stored in contiguous memory, while the inner vectors are not, it is faster to use the Eigen matrices. It is much more likely for a cache miss to happen when using the vector of vectors because of the inner vectors not being stored in contiguous memory.
 
+We also used smart pointers to automatically manage our variables and prevent memory leaks.
 
 ### OS Concepts and Inter-Process Communications (comm.os): (Mo? - try)
 - TODO
