@@ -8,6 +8,8 @@
 #include "utils.hpp"
 #include "read_data.hpp"
 
+extern int STEP_SIZE;
+
 namespace pose_graph {
 
 // -------------------------

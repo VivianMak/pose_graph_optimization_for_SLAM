@@ -2,9 +2,9 @@
 #include <cmath>
 #include <iostream>
 
-namespace pose_graph {
-
 int STEP_SIZE = 100;
+
+namespace pose_graph {
 
 PoseGraph::PoseGraph()
 {

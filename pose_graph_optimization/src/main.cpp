@@ -2,6 +2,7 @@
 #include "test_structs.hpp"
 #include "utils.hpp"
 #include "gn_optimizer.hpp"
+#include "icp.hpp"
 
 #include "Eigen/Dense"
 
@@ -10,6 +11,7 @@ int main() {
     // READING SIM DATA
     std::cout << "Reading robot data ..." << std::endl;
     auto [scans, odoms] = loadData("../../data/robot_data.bin");
+    std::cout << "number of odoms: " << odoms.size() << "\n";
 
     // testStructs();
 
@@ -47,8 +49,39 @@ int main() {
 
 
     // ICP
+    std::vector<std::unique_ptr<GN::Mat33>> Z_;
 
+    size_t num_readings = scans.size(); 
 
+    // Select ICP parameters
+    size_t num_iterations = 100;
+    size_t num_neighbors = 10;
+    double error_weighting = 0.5;
+
+    size_t num_nodes = fnodes.size();
+
+    // STEP_SIZE is from pose_graph.cpp
+    for (size_t reading_idx = num_readings - 1; reading_idx > STEP_SIZE; reading_idx -= STEP_SIZE) {
+        // Readings to find lidar transform between
+        size_t src_idx = reading_idx;
+        size_t dst_idx = reading_idx - STEP_SIZE;
+
+        // Convert selected scans into matrices that ICP can be done on
+        Eigen::MatrixXd src_point_matrix = scan_to_matrix(scans[src_idx]); // 3, n
+        Eigen::MatrixXd dst_point_matrix = scan_to_matrix(scans[dst_idx]); // 3, n
+
+        // Calculate the odom transform between the selected poses
+        Eigen::Matrix3d odom_htm = htm_between_poses(
+            fnodes[num_nodes-2]->pose,
+            fnodes[num_nodes-1]->pose
+        ); // 3, 3
+
+        // // Run ICP
+        Eigen::Matrix3d src_to_dst_htm = icp(src_point_matrix, dst_point_matrix, num_iterations, odom_htm, num_neighbors, error_weighting);
+
+        Z_.push_back(std::make_unique<GN::Mat33>(src_to_dst_htm));
+        num_nodes -= 1;
+    }
 
     // // Fake Z_ test data (3 matrices)
     std::vector<std::unique_ptr<GN::Mat33>> Z_test;
@@ -98,7 +131,7 @@ int main() {
         Eigen::Matrix3d::Identity()
     };
 
-    GN::GnOptimizer gn(Z_test, nodes, config);
+    GN::GnOptimizer gn(Z_, fnodes, config);
     bool isOptimized = gn.gnOptimizer(); // should also return X 
 
     if(isOptimized){

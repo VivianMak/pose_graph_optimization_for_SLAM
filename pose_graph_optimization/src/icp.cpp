@@ -59,20 +59,28 @@ void read_lidar(std::string file_path, std::vector<std::vector<LaserScan>> &lida
     }
 }   
 
-Eigen::MatrixXd scan_to_matrix(std::vector<LaserScan> single_scan) {
-    size_t num_points = single_scan.size();
+Eigen::MatrixXd scan_to_matrix(SavedLaserScan single_scan) {
+    std::vector<float> distances = single_scan.ranges;
+    size_t num_points = distances.size();
     Eigen::MatrixXd mat(3, num_points);
 
     for (size_t idx = 0; idx < num_points; ++idx) {
-        mat(0, idx) = single_scan[idx].x;
-        mat(1, idx) = single_scan[idx].y;
+        double angle = idx * 2 * M_PI / (num_points - 1); // in radians
+        float distance = distances[idx];
+        if (std::isinf(distance)) {
+            mat(0, idx) = 0.0;
+            mat(1, idx) = 0.0;
+        } else {
+            mat(0, idx) = distance * std::cos(angle);
+            mat(1, idx) = distance * std::sin(angle);
+        }
         mat(2, idx) = 1;
     }
     
     return mat;
 }
 
-Eigen::Matrix3d pose_to_htm(Pose pose) {
+Eigen::Matrix3d pose_to_htm(utils::Pose pose) {
     double c = std::cos(pose.theta);
     double s = std::sin(pose.theta);
 
@@ -83,7 +91,7 @@ Eigen::Matrix3d pose_to_htm(Pose pose) {
     return T;
 }
 
-Eigen::Matrix3d htm_between_poses(Pose pose_1, Pose pose_2) {
+Eigen::Matrix3d htm_between_poses(utils::Pose pose_1, utils::Pose pose_2) {
     // Computes transform from pose 1 to pose 2
     Eigen::Matrix3d htm1 = pose_to_htm(pose_1);
     Eigen::Matrix3d htm2 = pose_to_htm(pose_2);
@@ -275,42 +283,4 @@ Eigen::Matrix3d icp(Eigen::MatrixXd src_points, Eigen::MatrixXd dst_points, size
     }
 
     return lidar_htm;
-}
-
-//////////////////////////////////////////////////////////
-////////////////////////// MAIN //////////////////////////
-//////////////////////////////////////////////////////////
-
-void icp_example() {
-    // Select scans to find lidar transform between
-    int scan_one_idx = 0;
-    int scan_two_idx = 2695;
-
-    // Read and save odom and lidar data
-    auto noisy_poses = std::make_unique<std::vector<Pose>>();
-    auto laser_scans = std::make_unique<std::vector<std::vector<LaserScan>>>();
-
-    read_odom("noisy_odom_data.csv", *noisy_poses);
-    read_lidar("lidar_scans.csv", *laser_scans);
-
-    // Convert selected scans into matrices that ICP can be done on
-    Eigen::MatrixXd src_point_matrix = scan_to_matrix(laser_scans->at(scan_two_idx)); // 3, n
-    Eigen::MatrixXd dst_point_matrix = scan_to_matrix(laser_scans->at(scan_one_idx)); // 3, n
-
-    // Calculate the odom transform between the selected poses
-    Eigen::Matrix3d odom_htm = htm_between_poses(
-        noisy_poses->at(scan_one_idx),
-        noisy_poses->at(scan_two_idx)
-    ); // 3, 3
-
-    // Select ICP parameters
-    size_t num_iterations = 100;
-    size_t num_neighbors = 10;
-    double error_weighting = 0.5;
-
-    // Run ICP
-    Eigen::Matrix3d src_to_dst_htm = icp(src_point_matrix, dst_point_matrix, num_iterations, odom_htm, num_neighbors, error_weighting);
-
-    // Print the lidar htm
-    std::cout << src_to_dst_htm << "\n";
 }
