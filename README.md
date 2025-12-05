@@ -12,9 +12,6 @@ For simplicity, the problem is constrained to a 2.5D world, meaning the robot mo
 
 ## TODO
 ## Allan
-- add iostream to libraries
-- add cmath to libraries
-- the algorithm > pose graph
 - COMPETENCY
 
 ## Vivian
@@ -70,9 +67,9 @@ To develop and test our pose graph optimization algorithm we needed odometry and
 The odometry and LiDAR data in the simulation are perfect. We added "noise" to simulate odometry drift by adding accumulating normally distributed small offsets to x and y at each measurement. As a result, our pose graph optimization had error in our odometry to fix.
 
 ### 2. Constructing the Pose Graph
-TODO
+Before we can begin doing pose graph optimization, we must start with the underlying pose graph structure that the solver will later operate on. The purpose of the pose graph is to convert raw odometry data into a sequence of nodes, compute the relative transformations between consecutive poses, and store those transformations as edges. This forms the “backbone” of the graph: a chain of constraints that encode how the robot moved from one timestep to the next. Additional loop-closure constraints from ICP can then be added directly to this structure.
 
-Stucts:
+To organize this information, the system uses several core data structures defined in `include/utils.hpp`:
 ```cpp
 include/utils.hpp
 
@@ -81,6 +78,18 @@ struct Pose{};    // x,y,theta
 struct Edge{};    // *parent,transform
 struct Node{};    // node-id, Pose, edges
 ```
+Each `Node` corresponds to one instantaneous moment in time and stores the robot’s estimated pose as derived from odometry. Each `Edge` stores a 3×3 homogeneous transform encoding how one node’s pose relates to another. Taken together, these form the initial structure on which optimization algorithms can later operate on.
+
+**High Level Steps**
+1. Convert Odometry to 2D Poses
+
+2. Create One Node Per Timetamp
+
+3. Compute Relative Transformations Between Sequential Poses
+   
+4. Store the Transform as an Edge Constraint
+
+5. Record Lightweight Edge Index Pairs
 
 ### 3. Transformations with ICP
 Pose graph optimization needs two estimates of where the robot is to optimize. In our case, we used Odometry and LiDAR. Getting the transformation between the location of the robot at two points in time is easy with odometry. ROS2 odometry messages give us a estimate of the robots pose in an odometry frame. However, for LiDAR, to get the transformation matrix, we need to overlay similar LiDAR scans and determine if we are confident that they are observing the same environment. 
