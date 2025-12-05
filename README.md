@@ -15,10 +15,6 @@
 - COMPETENCY
 
 ## Mo
-- the algorithm > gathering sim data
-- the algorithm > transformation with icp
-- turn icp matrices into unique pointers
-- put function and output in main.cpp
 - COMTEPETNS
 
 
@@ -34,8 +30,8 @@
 
 ## Repo Structure
 **Additional Libararies / Files:**
-- Nanoflann (insert link) point to header file we need to include
-- Eigen: https://libeigen.gitlab.io/
+- [Nanoflann](https://github.com/jlblancoc/nanoflann)
+- [Eigen](https://libeigen.gitlab.io/)
 
 ```
 Project/
@@ -67,7 +63,14 @@ $ ./main
 ## The Algorithm
 
 ### 1. Gathering Simulation Data
-TODO
+
+To develop and test our pose graph optimization algorithm we needed odometry and LiDAR data. We obtained this data using the [TurtleBot 4 simulator](https://turtlebot.github.io/turtlebot4-user-manual/software/turtlebot4_simulator.html) and ROS2. We recorded a ROSbag and made a ROS2 node to record the scan and odom messages to a binary that we then read from to make the different components of our algorithm.
+
+|                                                  ![Recording of TurtleBot4 in sim used for data gathering](/data/drive_in_square/editted_drive_square.gif)                                               |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| Recording of TurtleBot4 simulation used for data gathering |
+
+The odometry and LiDAR data in the simulation are perfect. We added "noise" to simulate odometry drift by adding accumulating normally distributed small offsets to x and y at each measurement. As a result, our pose graph optimization had error in our odometry to fix.
 
 ### 2. Constructing the Pose Graph
 TODO
@@ -83,7 +86,36 @@ struct Node{};    // node-id, Pose, edges
 ```
 
 ### 3. Transformations with ICP
-TODO
+Pose graph optimization needs two estimates of where the robot is to optimize. In our case, we used Odometry and LiDAR. Getting the transformation between the location of the robot at two points in time is easy with odometry. ROS2 odometry messages give us a estimate of the robots pose in an odometry frame. However, for LiDAR, to get the transformation matrix, we need to overlay similar LiDAR scans and determine if we are confident that they are observing the same environment. 
+
+This is where ICP, iterative closest point, comes in. We give the algorithm two scans that observe approximately the same environment. It outputs a transformation matrix mapping the source scan to the destination scan's frame. This allows us to create a constraint between the nodes with the corresponding scans. In the context, the destination scan is already part of the pose graph, the source scan is newly added. This constraint allows us to optimize our pose graph. We implemented a variant of ICP called point to plane ICP.
+
+**High Level Steps**
+1. Compute the normals of each destination point
+2. Transform source scan using an estimate (Odometry)
+3. For each source point find the NN (nearest neighbor) destination point
+4. Compute the error between the source point and the destination point along it's normal
+5. Build the least-squares system
+6. Solve the system for how to update the output transform
+7. Loop steps 3-6 until convergence, in our case max iterations reached
+
+```cpp
+// Pseudocode
+icp(dst_points, src_points, odom_transform) {
+  src_points = odom_transform * src_points; // Transform src_points to get close to dst_points
+  transform = odom_transform
+  normals = compute_normals(dst_points);
+  while(!converged){
+    error; 
+    for (i; i < src_points.size(); i++){
+      error[i] = find_error(src_points[i], dst_points[j], normals[j]); // j is index of the NN d_point 
+    }
+    iteration_transform = solve_least_square(error, dst_points, src_points);
+    transform = iteration_transform * transform;
+  }
+  return transform;
+}
+```
 
 ### 4. Gauss-Newton Global Optimization
 
