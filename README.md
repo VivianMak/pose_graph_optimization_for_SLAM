@@ -290,4 +290,4 @@ To optimize the performance of our algorithm we used structs so the fields would
 We also used smart pointers to automatically manage our variables and prevent memory leaks.
 
 ### OS Concepts and Inter-Process Communications (comm.os): (Mo? - try)
-- TODO
+We used std::ofstream to write our LiDAR and odometry data from a ROSbag to binary files and csvs.
