@@ -39,6 +39,9 @@ namespace GN
             N_.push_back(*ptr);   // dereference → copy Node
         }
 
+        // fix pointer reassignment
+        gn_helper::remapParentPointers(N, N_);
+
         // Initalize copy of nodes backwards
         X_ = N_;
         std::reverse(X_.begin(), X_.end());
@@ -247,11 +250,7 @@ namespace GN
 
         // return false somewhere
 
-    }
-
-
-
-    
+    }    
 }
 
 

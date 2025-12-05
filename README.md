@@ -2,12 +2,15 @@
 > #### Software Systems Course Project | Members: Allan, Mo, Vivian
 
 ## Overview
-- 2.5D
-- Focusing on pose graph optimization for SLAM.
-- wanted to implement ourselves and learn the math
+This project builds a full pose-graph optimization pipeline from scratch, a core component of Simultaneous Localization and Mapping (SLAM). 
 
+This project builds a full pose-graph optimization pipeline from scratch, implementing one of the core back-end components of Simultaneous Localization and Mapping (SLAM). In this framework, the robot’s trajectory is represented as a series of poses (nodes), while relative motion measurements(wheel odometry / laser scan)form the edges that connect these poses. Each edge encodes a relative transformation with some noise uncertainty.
 
-# TODO
+The goal of the optimization is to correct a robot’s estimated trajectory by enforcing constraints between poses over time. When the robot revisits previously seen locations, additional constraints (loop closures) help correct accumulated wheel odometry drift. By formulating the problem as a nonlinear least-squares optimization, we iteratively minimize the error between predicted and measured relative transforms using Gauss–Newton. This involves computing Jacobians, assembling the global linear system, solving for updates, and refining the trajectory until convergence.
+
+For simplicity, the problem is constrained to a 2.5D world, meaning the robot moves on a plane but still maintains a full orientation (x, y, θ). This reduces complexity while preserving the essential structure of real-world pose graph optimization problems.
+
+## TODO
 ## Allan
 - add iostream to libraries
 - add cmath to libraries
@@ -18,10 +21,8 @@
 - the algorithm > gausnewton
 - debug optimizer after icp
 - - auto run test files after building? (add_test for cmake command)
-- COMPAEFH
+- Potential ways to speed up the code are to ...
 
-
-- " allowing the CPU to fetch multiple pieces of data in a single cache line, leading to faster access times, only one pointer per struct,"
 
 
 ## Repo Structure
@@ -217,7 +218,11 @@ bool isOptimized = gnOptimizer(
 return X_;    // optimized nodes
 ```
 
+## Next Steps
 
+```
+
+```
 
 ## Course Competencies
 
@@ -253,33 +258,17 @@ The Eigen library is a high-level C++ library of template headers for linear alg
   memory did you examine and why? What functions did you step into?)
 ```
 
-### Build Systems (sw.build): (vivian)
+### Build Systems (sw.build):
 
+The way that we orgamized our build configurations was to create a library for each of the files. Then when we are building the main executable, we just link all the previously built libaries. Using libaries allows us to only rebuild the files that have changed, saving on compliation time. We wanted to approach it this way because the modularity of this project means in order to test one part of the algorithm, very little has to change in the other parts. Especially with large files like ```icp.cpp```, I did not want to rebuild everything every single time.
 
-```
-- How you organized your project into specific components/files (What does each
-  component do? What functionality does `redirect.c` handle?)
-- Why you organized your project components/files in the way that you did
-- Why you linked libraries into a component of your project in a certain way
-  (Why did you link the `node` library publicly rather than privately?) P WITH AN EXPLANATION FOR THIS
-- Why you selected the build configuration or options that you did
-- Build options or configurations specific to the architecture yoou
-- Challenges you faced in linking an external library, and how you overcame them
-```
+In terms of organizing files, our header files are stored in the ```include/``` folder and the corresponding implementations are stored in the ```src/``` folder. The files with helper functions are contained within the header file. For the ```CMakeLists.txt```, Eigen is linked publicly because other files also need access to the library.
 
-### Performance Bottlenecks (perf.bn): (Vivian)
+### Performance Bottlenecks (perf.bn):
 
 The ICP step takes a significant more amout of time to build and run due to the high volume of data (laserscan points) it process with multiple iterations. In each part of the code, since many actions happen in iterations, many functions are called often. For example, the ICP function is called for every adjacent node along with calculating the error and jacobian matrix in the optimization step. One memory leak we found in the program was with trying to make a literal copy of the node vector. The goal was to compare the benefits of the nodes post-optimization by plotting against the intial nodes. However, each node contains a vector of pointers to parent nodes, which we call edges. It won't be possible to just use another variable like ```line:42 X_ = N_``` because the new varible will still reference the original variable and having pointers will be an issue with ownership. We want to copy the data and not the address, then make sure the pointer is pointing to the new set of nodes. The method to go around this is to create an independent deep copy of the initial node vector.
 
-Potential ways to speed up the code are to 
-
-```
-- Potential performance issues in your program (What parts of the program run
-  slower than expected?)
-- What specific functions are called often in your program
-- Memory leaks that you found and/or fixed in your program
-- Potential ways to speed up the execution of your program
-```
+Potential ways to speed up the code are to ...
 
 ### Data/Program Representation for Performance (perf.rep):
 To optimize the performance of our algorithm we used structs so the fields would be stored in contiguous memory. For example, by using Eigen matrices instead of vectors of vectors of doubles, because the contents of Eigen matrices are stored in contiguous memory, while the inner vectors are not, it is faster to use the Eigen matrices. It is much more likely for a cache miss to happen when using the vector of vectors because of the inner vectors not being stored in contiguous memory.
