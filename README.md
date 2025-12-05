@@ -2,25 +2,11 @@
 > #### Software Systems Course Project | Members: Allan, Mo, Vivian
 
 ## Overview
-This project builds a full pose-graph optimization pipeline from scratch, a core component of Simultaneous Localization and Mapping (SLAM). 
-
-This project builds a full pose-graph optimization pipeline from scratch, implementing one of the core back-end components of Simultaneous Localization and Mapping (SLAM). In this framework, the robot’s trajectory is represented as a series of poses (nodes), while relative motion measurements(wheel odometry / laser scan)form the edges that connect these poses. Each edge encodes a relative transformation with some noise uncertainty.
+This project builds a full pose-graph optimization pipeline from scratch, a core component of Simultaneous Localization and Mapping (SLAM). In this framework, the robot’s trajectory is represented as a series of poses (nodes), while relative motion measurements(wheel odometry / laser scan)form the edges that connect these poses. Each edge encodes a relative transformation with some noise uncertainty.
 
 The goal of the optimization is to correct a robot’s estimated trajectory by enforcing constraints between poses over time. When the robot revisits previously seen locations, additional constraints (loop closures) help correct accumulated wheel odometry drift. By formulating the problem as a nonlinear least-squares optimization, we iteratively minimize the error between predicted and measured relative transforms using Gauss–Newton. This involves computing Jacobians, assembling the global linear system, solving for updates, and refining the trajectory until convergence.
 
 For simplicity, the problem is constrained to a 2.5D world, meaning the robot moves on a plane but still maintains a full orientation (x, y, θ). This reduces complexity while preserving the essential structure of real-world pose graph optimization problems.
-
-## TODO
-## Allan
-- COMPETENCY
-
-## Vivian
-- the algorithm > gausnewton
-- debug optimizer after icp
-- - auto run test files after building? (add_test for cmake command)
-- Potential ways to speed up the code are to ...
-
-
 
 ## Repo Structure
 **Additional Libararies / Files:**
@@ -39,7 +25,7 @@ Project/
 │   │   └── # Implmentation files
 │   └── CMakeLists.txt
 ├── test/
-│   └── unit_tests.cpp
+│   └── test_structs.cpp
 └── visualization/
     └── # visualizations in python
 ```

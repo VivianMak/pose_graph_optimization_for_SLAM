@@ -42,11 +42,13 @@ void remapParentPointers(
         utils::Node &n = newNodes[i];
 
         for (auto &edgePtr : n.edges) {
+            //get raw pointer without taking away ownership
             utils::Edge *edge = edgePtr.get();
 
             const utils::Node *oldParent = edge->parent;
             
             if (pointerMap.count(oldParent)) {
+                // get pointer to new parent with pointer map
                 edge->parent = pointerMap[oldParent];
             }
         }
