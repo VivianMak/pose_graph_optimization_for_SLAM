@@ -182,14 +182,61 @@ Now, we want to perform a linearization (first Tyalor expansion) around the curr
 
 The objective is to minimize the errors:
 
+$$
+\min_{x} \; \sum_{i,j} e_{ij}(x)^\top \, \Omega_{ij} \, e_{ij}(x)
+$$
+
 Taking a first-order Taylor expansion around x:
 
-Plugging into squared error objective
+$$
+e(x + \Delta x) \approx e(x) + J(x)\, \Delta x
+$$
+
+where:
+
+- $e(x)$ is the residual (error or current estimate)
+- $J(x) = \frac{\partial e(x)}{\partial x}$ is the Jacobian  
+- $\Delta x$ is the small increment  
+
+Plugging into squared error objective:
+
+$$
+F(x + \Delta x)
+= \| e(x + \Delta x) \|^2
+\approx
+\| e(x) + J \Delta x \|^2
+$$
 
 Differentiate w.r.t. $\Delta$ x and set to zero:
 
+$$
+J^\top \Omega J \; \Delta x = -J^\top \Omega \, e
+$$
 
-The Jacobian in this context represents the ... In
+Final linear system:
+
+$$
+\boxed{H \Delta x = b}
+$$
+
+The Jacobian in this context is used to find the actual $\Delta x$ for each pair of adjacent nodes in order to correct it. The partial derivatives together gives us an adjacency matrix for the linearized system where we can quantify the rate of change for $x, y$ or $\theta$ when any component of the pose of either matricies move. A decomposed version of the matrix for some arbitrary pose $p_i$ and $p_j$ is shown below.
+
+$$
+J_{ij} \;=\;
+\begin{bmatrix}
+\displaystyle
+\frac{\partial e_x}{\partial x_i} & \frac{\partial e_x}{\partial y_i} & \frac{\partial e_x}{\partial \theta_i} &
+\frac{\partial e_x}{\partial x_j} & \frac{\partial e_x}{\partial y_j} & \frac{\partial e_x}{\partial \theta_j} \\
+
+\displaystyle
+\frac{\partial e_y}{\partial x_i} & \frac{\partial e_y}{\partial y_i} & \frac{\partial e_y}{\partial \theta_i} &
+\frac{\partial e_y}{\partial x_j} & \frac{\partial e_y}{\partial y_j} & \frac{\partial e_y}{\partial \theta_j} \\
+
+\displaystyle
+\frac{\partial e_{\theta}}{\partial x_i} & \frac{\partial e_{\theta}}{\partial y_i} & \frac{\partial e_{\theta}}{\partial \theta_i} &
+\frac{\partial e_{\theta}}{\partial x_j} & \frac{\partial e_{\theta}}{\partial y_j} & \frac{\partial e_{\theta}}{\partial \theta_j}
+\end{bmatrix}
+$$
 
 **Code Structure**
 ```cpp
@@ -219,10 +266,9 @@ return X_;    // optimized nodes
 ```
 
 ## Next Steps
-
-```
-
-```
+- Begin to start visualizing the map from laserscan data to understand bugs in the code.
+- Real-time SLAM
+  - One thing we could try is to predefine and preallocate the exact memory we need, then run everything concurrently to prevent cache overload.
 
 ## Course Competencies
 
@@ -276,7 +322,7 @@ In terms of organizing files, our header files are stored in the ```include/``` 
 
 The ICP step takes a significant more amout of time to build and run due to the high volume of data (laserscan points) it process with multiple iterations. In each part of the code, since many actions happen in iterations, many functions are called often. For example, the ICP function is called for every adjacent node along with calculating the error and jacobian matrix in the optimization step. One memory leak we found in the program was with trying to make a literal copy of the node vector. The goal was to compare the benefits of the nodes post-optimization by plotting against the intial nodes. However, each node contains a vector of pointers to parent nodes, which we call edges. It won't be possible to just use another variable like ```line:42 X_ = N_``` because the new varible will still reference the original variable and having pointers will be an issue with ownership. We want to copy the data and not the address, then make sure the pointer is pointing to the new set of nodes. The method to go around this is to create an independent deep copy of the initial node vector.
 
-Potential ways to speed up the code are to ...
+Potential ways to speed up the code are to remove the previously used variables to save on cache, use more structs for similar data structure types so we only have to retrieve one address. Difficult becuase we need access to all previous poses for global optimization.
 
 ### Data/Program Representation for Performance (perf.rep):
 To optimize the performance of our algorithm we used structs so the fields would be stored in contiguous memory. For example, by using Eigen matrices instead of vectors of vectors of doubles, because the contents of Eigen matrices are stored in contiguous memory, while the inner vectors are not, it is faster to use the Eigen matrices. It is much more likely for a cache miss to happen when using the vector of vectors because of the inner vectors not being stored in contiguous memory.
