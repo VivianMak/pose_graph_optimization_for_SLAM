@@ -98,8 +98,8 @@ int main() {
     if(isOptimized){
         std::cout << "IS OPTIMIZED FINISHED\n";
         const auto& resultX = gn.getX();
-        const auto& n = nodes[i];
-        std::cout << "The optimized nodes are: " << n->node_id << std::endl;
+        // const auto& n = resultX[4];
+        std::cout << "The optimized nodes are: " << resultX.size() << std::endl;
         // Comparison of nodes before v after global optimization
         // for (size_t i = 0; i < N_.size(); i++) {
         //     double dx = N_[i].pose.x - X[i].pose.x;
