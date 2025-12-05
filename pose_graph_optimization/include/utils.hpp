@@ -89,7 +89,7 @@ struct Node {
 
     Node& operator=(const Node& other)
     {
-        // guard self-assignment
+        // guard self assignment
         if (this == &other) 
             return *this;
         

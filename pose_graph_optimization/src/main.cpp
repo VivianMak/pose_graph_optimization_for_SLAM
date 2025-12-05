@@ -22,10 +22,10 @@ int main() {
     std::cout << "\nBuilding pose graph ..." << std::endl;
 
     // Inspect the graph thru terminal
-    const auto& fnodes = graph.nodes();
+    const auto& nodes = graph.nodes();
     const auto& edges = graph.edgeIndices();
 
-    std::cout << "Created nodes: " << fnodes.size() << "\n";
+    std::cout << "Created nodes: " << nodes.size() << "\n";
     std::cout << "Created edges: " << edges.size() << "\n\n";
 
     // print first few nodes
@@ -58,7 +58,7 @@ int main() {
     size_t num_neighbors = 10;
     double error_weighting = 0.5;
 
-    size_t num_nodes = fnodes.size();
+    size_t num_nodes = nodes.size();
 
     // STEP_SIZE is from pose_graph.cpp
     for (size_t reading_idx = num_readings - 1; reading_idx > STEP_SIZE; reading_idx -= STEP_SIZE) {
@@ -72,8 +72,8 @@ int main() {
 
         // Calculate the odom transform between the selected poses
         Eigen::Matrix3d odom_htm = htm_between_poses(
-            fnodes[num_nodes-2]->pose,
-            fnodes[num_nodes-1]->pose
+            nodes[num_nodes-2]->pose,
+            nodes[num_nodes-1]->pose
         ); // 3, 3
 
         // // Run ICP
@@ -82,45 +82,6 @@ int main() {
         Z_.push_back(std::make_unique<GN::Mat33>(src_to_dst_htm));
         num_nodes -= 1;
     }
-
-    // // Fake Z_ test data (3 matrices)
-    std::vector<std::unique_ptr<GN::Mat33>> Z_test;
-
-    // GN::Mat33 T1;
-    // T1 << 1, 0, 1,
-    //     0, 1, 2,
-    //     0, 0, 1;
-
-    // GN::Mat33 T2;
-    // T2 << cos(0.5), -sin(0.5), 0.3,
-    //     sin(0.5),  cos(0.5), 0.7,
-    //     0,         0,        1;
-
-    // GN::Mat33 T3;
-    // T3 << cos(-1.2), -sin(-1.2), -0.8,
-    //     sin(-1.2),  cos(-1.2),  1.5,
-    //     0,          0,          1;
-
-    // Z_test.push_back(std::make_unique<GN::Mat33>(T1));
-    // Z_test.push_back(std::make_unique<GN::Mat33>(T2));
-    // Z_test.push_back(std::make_unique<GN::Mat33>(T3));
-
-    // // Fake nodes test data (3 nodes)
-    // std::vector<std::unique_ptr<utils::Node>> nodes;
-
-    // // Assume Pose has a constructor Pose(x, y, theta)
-    // utils::Pose p1(0.0, 0.0, 0.0);
-    // utils::Pose p2(1.0, 2.0, 0.5);
-    // utils::Pose p3(-1.0, 1.5, -0.7);
-
-    // // Create nodes and push into vector
-    // nodes.push_back(std::make_unique<utils::Node>(0, p1));
-    // nodes.push_back(std::make_unique<utils::Node>(1, p2));
-    // nodes.push_back(std::make_unique<utils::Node>(2, p3));
-
-    // // Optionally, add edges if needed
-    // nodes[1]->addEdge(nodes[0].get(), *Z_test[0]);  // node1 -> node0
-    // nodes[2]->addEdge(nodes[1].get(), *Z_test[1]);  // node2 -> node1
 
     // GLOBAL OPTIMIZATION
 
@@ -131,12 +92,14 @@ int main() {
         Eigen::Matrix3d::Identity()
     };
 
-    GN::GnOptimizer gn(Z_, fnodes, config);
+    GN::GnOptimizer gn(Z_, nodes, config);
     bool isOptimized = gn.gnOptimizer(); // should also return X 
 
     if(isOptimized){
         std::cout << "IS OPTIMIZED FINISHED\n";
         const auto& resultX = gn.getX();
+        const auto& n = nodes[i];
+        std::cout << "The optimized nodes are: " << n->node_id << std::endl;
         // Comparison of nodes before v after global optimization
         // for (size_t i = 0; i < N_.size(); i++) {
         //     double dx = N_[i].pose.x - X[i].pose.x;

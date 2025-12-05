@@ -236,8 +236,6 @@ Eigen Libary: https://libeigen.gitlab.io/
 
 The Eigen library is a high-level C++ library of template headers for linear algebra, matrix and vector operations, geometrical transformations, numerical solvers and related algorithms. The library was extremely useful for all parts of the algorithm since 3x3 homogenous transforms was a big part of geneating a pose graph. The Gaus-Newton Global Optimization heaivly utilized the libary with the complex math. In the documentation this page (https://libeigen.gitlab.io/eigen/docs-5.0/group__TutorialMatrixClass.html) was the most useful. It explained how to initalize matrices of the sizes we want, either pre-allocation or dynamically. The most challening part was finding what we actually needed with the library. It offers a lot of functions, but we just need basic matrix multiplication and intialization. I came to an understanding of the library once I saw how another project implemented its fucnctions like `Eigen::Sucess`. (Gaus-Newton Repo: https://github.com/milkpku/IGsolver/tree/master)
 
-Libary: Link
-
 
 ### Debugging (sw.debug): (allan)
 
@@ -271,6 +269,9 @@ Libary: Link
 
 ### Performance Bottlenecks (perf.bn): (Vivian)
 
+The ICP step takes a significant more amout of time to build and run due to the high volume of data (laserscan points) it process with multiple iterations. In each part of the code, since many actions happen in iterations, many functions are called often. For example, the ICP function is called for every adjacent node along with calculating the error and jacobian matrix in the optimization step. One memory leak we found in the program was with trying to make a literal copy of the node vector. The goal was to compare the benefits of the nodes post-optimization by plotting against the intial nodes. However, each node contains a vector of pointers to parent nodes, which we call edges. It won't be possible to just use another variable like ```line:42 X_ = N_``` because the new varible will still reference the original variable and having pointers will be an issue with ownership. We want to copy the data and not the address, then make sure the pointer is pointing to the new set of nodes. The method to go around this is to create an independent deep copy of the initial node vector.
+
+Potential ways to speed up the code are to 
 
 ```
 - Potential performance issues in your program (What parts of the program run
