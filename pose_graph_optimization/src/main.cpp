@@ -3,6 +3,7 @@
 #include "utils.hpp"
 #include "gn_optimizer.hpp"
 #include "icp.hpp"
+#include "viz.hpp"
 
 #include "Eigen/Dense"
 
@@ -16,8 +17,20 @@ int main() {
     // testStructs();
 
     // POSE GRAPH
+    //
+    // The simulator's odometry is essentially ground truth, so we inject
+    // compounding drift to give the optimizer something real to correct. The
+    // LIDAR scans are untouched, which is the whole point: ICP still measures
+    // the true relative motion, so those constraints can pull the drifted
+    // trajectory back toward truth.
+    pose_graph::NoiseConfig noise;
+    noise.enabled     = true;
+    noise.sigma_xy    = 0.010;  // per-sample translation error (m)
+    noise.sigma_theta = 0.008;  // per-sample heading error (rad)
+    noise.seed        = 42;      // fixed for reproducible runs
+
     pose_graph::PoseGraph graph;
-    graph.build(scans, odoms);
+    graph.build(scans, odoms, noise);
 
     std::cout << "\nBuilding pose graph ..." << std::endl;
 
@@ -60,8 +73,17 @@ int main() {
 
     size_t num_nodes = nodes.size();
 
-    // STEP_SIZE is from pose_graph.cpp
-    for (size_t reading_idx = num_readings - 1; reading_idx > STEP_SIZE; reading_idx -= STEP_SIZE) {
+    // STEP_SIZE is from pose_graph.cpp.
+    //
+    // Node m is built from odom sample m*STEP_SIZE, so the scan that belongs to
+    // node m is scans[m*STEP_SIZE]. Starting from scans.size()-1 instead walks a
+    // grid offset by (scans.size()-1) % STEP_SIZE == 36, which pairs every ICP
+    // constraint with scans taken 36 samples away from the nodes it constrains.
+    // That is invisible on the straight runs and badly wrong through the turns.
+    //
+    // The bound is >= so the final edge (scan STEP_SIZE -> scan 0) is built too.
+    // With > the first node gets no constraint at all and drifts free of the graph.
+    for (size_t reading_idx = (num_nodes - 1) * STEP_SIZE; reading_idx >= STEP_SIZE; reading_idx -= STEP_SIZE) {
         // Readings to find lidar transform between
         size_t src_idx = reading_idx;
         size_t dst_idx = reading_idx - STEP_SIZE;
@@ -104,8 +126,30 @@ int main() {
         // for (size_t i = 0; i < N_.size(); i++) {
         //     double dx = N_[i].pose.x - X[i].pose.x;
         // }
+
+        // VISUALIZATION
+        // Dump pre- and post-optimization routes so they can be compared.
+        // getX() is stored reversed internally, so sort by node_id to line
+        // it back up with the pre-optimized route before overlaying.
+        auto pre_poses  = viz::posesFromNodes(nodes);
+        auto opt_poses  = viz::posesFromNodes(resultX, /*sort_by_id=*/true);
+
+        viz::writeCSV("../../data/pre_optimized.csv", pre_poses);
+        viz::writeCSV("../../data/optimized.csv", opt_poses);
+
+        // Raw odometry stream, drawn first so it sits behind the two routes.
+        // This never passes through the pose graph -- it is the full ~4000
+        // sample stream the 42 nodes were subsampled from, so it shows what the
+        // graph is actually built on top of.
+        auto odom_poses = viz::readCSV("../../data/noisy_odom_data.csv");
+
+        viz::writeSVG("../../visualization/trajectories.svg", {
+            {"odom (ground truth)", "#9aa0a6", odom_poses, viz::Style::Points},
+            {"pre-optimized (drifted)", "crimson", pre_poses},
+            {"optimized", "royalblue", opt_poses}
+        });
     }
-        
+
 
     return 0;
 }

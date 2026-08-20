@@ -21,6 +21,28 @@ struct EdgeIndex {
 };
 
 // -------------------------
+// NoiseConfig: simulated wheel-odometry drift
+// -------------------------
+//
+// The simulator's odometry is effectively ground truth, so without this there is
+// no drift for the optimizer to correct and the "pre-optimized" route is already
+// the right answer.
+//
+// Real odometry drifts because every incremental motion estimate carries a small
+// error and those errors COMPOUND -- a heading error early on swings the entire
+// trajectory that follows it. Perturbing absolute x/y would not reproduce that;
+// the noise has to corrupt each per-step increment, which is then integrated.
+// That is what makes the loop fail to close, which is exactly the error signal
+// pose graph optimization exists to remove.
+//
+struct NoiseConfig {
+    bool enabled       = false;  // off keeps the original clean-odometry behavior
+    double sigma_xy    = 0.0;    // stddev of per-sample translation error (m)
+    double sigma_theta = 0.0;    // stddev of per-sample heading error (rad)
+    unsigned int seed  = 42;     // fixed so a run is reproducible
+};
+
+// -------------------------
 // PoseGraph
 // -------------------------
 //
@@ -44,10 +66,12 @@ public:
      *
      * @param scans  (vector) lidar scans loaded from read_data
      * @param odoms  (vector) odometry entries loaded from read_data
+     * @param noise  (NoiseConfig) optional simulated drift; default is clean odom
      * @return void
      */
     void build(const std::vector<SavedLaserScan>& scans,
-               const std::vector<SavedOdom>& odoms);
+               const std::vector<SavedOdom>& odoms,
+               const NoiseConfig& noise = {});
 
     /**
      * Get reference to internal node list.

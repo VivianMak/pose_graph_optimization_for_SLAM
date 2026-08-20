@@ -41,8 +41,11 @@ class GnOptimizer{
                                 const Vec3 &xj, 
                                 const Mat33 &z_ij);
 
-        bool buildLinearHb(const size_t n,
-                        // const std::vector<utils::Node> &X,  
+        // Builds the full linear system for every edge and returns the total
+        // squared error (chi^2). Convergence is judged by the caller on that
+        // total -- never on a single edge mid-assembly.
+        double buildLinearHb(const size_t n,
+                        // const std::vector<utils::Node> &X,
                         dMat &H,
                         dVec &b);
 

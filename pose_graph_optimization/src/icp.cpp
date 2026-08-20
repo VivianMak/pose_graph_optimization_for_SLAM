@@ -65,7 +65,15 @@ Eigen::MatrixXd scan_to_matrix(SavedLaserScan single_scan) {
     Eigen::MatrixXd mat(3, num_points);
 
     for (size_t idx = 0; idx < num_points; ++idx) {
-        double angle = idx * 2 * M_PI / (num_points - 1); // in radians
+        // SavedLaserScan only keeps `ranges` -- angle_min / angle_increment were
+        // dropped when the ROSbag was written to binary, so the scan's angular
+        // origin has to be assumed here. The LiDAR's zero index is not aligned
+        // with the robot's +x axis: without this offset every ICP transform
+        // comes out conjugated by R(90deg), which rotates the translation while
+        // leaving the rotation untouched (odom says +0.49 in x, ICP said +0.50
+        // in y). Verified against odometry on the straight segments.
+        constexpr double SCAN_ANGLE_OFFSET = -M_PI_2;
+        double angle = idx * 2 * M_PI / (num_points - 1) + SCAN_ANGLE_OFFSET; // in radians
         float distance = distances[idx];
         if (std::isinf(distance)) {
             mat(0, idx) = 0.0;

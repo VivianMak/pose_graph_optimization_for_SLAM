@@ -304,3 +304,72 @@ We also used smart pointers to automatically manage our variables and prevent me
 
 ### OS Concepts and Inter-Process Communications (comm.os):
 We used std::ofstream to write our LiDAR and odometry data from a ROSbag to binary files and csvs.
+
+## Code Fixes
+
+These bugs were found by comparing the optimizer's output against known-good references (odometry on straight segments, matched trajectory shape/orientation) rather than by inspection alone -- several looked correct in isolation and only surfaced when the pieces ran together.
+
+
+### Rotational error was never measured
+
+**Problem:** In `GnOptimizer::computeErrorAndJacobian` (`src/gn_optimizer.cpp`), the error vector's theta component reused the x-component's index:
+```cpp
+e << xj_pred(0) - xj(0),
+     xj_pred(1) - xj(1),
+     utils::wrap_rad(xj_pred(0) - xj(0));   // should be index 2
+```
+**Fix:** Changed the third term to `xj_pred(2) - xj(2)`.
+
+**Why:** With the typo, `e(2)` duplicated `e(0)`, so heading error was silently invisible to the optimizer -- it could never detect or correct rotational drift, only translation.
+
+### The optimizer's convergence check aborted the entire solve
+
+**Problem:** `buildLinearHb` (`src/gn_optimizer.cpp`) checked `e.norm() < config_.threshold` **inside** the per-edge loop and returned immediately the first time any single edge had low error:
+```cpp
+if (e.norm() < config_.threshold) { return true; }
+```
+Because the first and last edges in this dataset are genuinely near-zero (the robot is stationary at the start/end of the recording), this fired on iteration 0 of the very first Gauss-Newton pass. `H` and `b` were never assembled, `LDLT` never ran, and no pose was ever updated -- `pre_optimized.csv` and `optimized.csv` came out byte-identical.
+
+**Fix:** `buildLinearHb` now accumulates chi-squared (`chi2 += e.transpose() * config_.omega * e`) across **every** edge and returns that total (its signature changed from `bool` to `double`, updated in `gn_optimizer.hpp` too). `GnOptimizer::gnOptimizer()` checks convergence on that total *after* the full system is assembled, plus a step-size check (`dX.norm() < 1e-6`).
+
+**Why:** Convergence is a property of the whole graph, not any single edge. One well-aligned edge says nothing about whether the other 40 have error to correct.
+
+### `H`/`b` were sized too small
+
+**Problem:** In `gnOptimizer()` (`src/gn_optimizer.cpp`), `H` and `b` were allocated as `3*n x 3*n` where `n = Z_.size()` (the edge count). But `buildLinearHb`'s loop indexes pose blocks up to `3*(n+1)`, one pose-block past the end of the matrix.
+
+**Fix:** Sized `H`/`b` by pose count instead: `const size_t dim = 3 * X_.size();`.
+
+**Why:** The system has one 3-DOF block per **pose**, not per edge, and a graph with `n` edges has `n+1` poses. This only surfaced once the previous bug was fixed and the solver actually ran far enough to hit the out-of-bounds block.
+
+### The linear system was singular (no gauge fix)
+
+**Problem:** Relative pose constraints alone pin the graph's *shape* but not where it sits in the world -- `H` was rank-deficient by 3 (global x, y, theta), so `LDLT::solve` had no unique answer.
+
+**Fix:** Added an anchor in `buildLinearHb`: `H.block<3,3>(3*anchor, 3*anchor) += Eigen::Matrix3d::Identity() * 1e6`, pinning the chronologically-first pose (`X_` is stored reversed, so this is `X_.size() - 1`).
+
+**Why:** A strong prior on one pose removes the rank deficiency and gives the system a unique solution without changing what the constraints say about relative motion.
+
+### The error function and Jacobian used different reference frames
+
+**Problem:** In `computeErrorAndJacobian`, the Jacobian was derived for a **local-frame** residual (`e = R(theta_i)^T (t_j - t_i) - t_z`), but the error being computed was a **global-frame** prediction error (`e = t2v(T_i . Z_ij) - x_j`). Gauss-Newton requires the Jacobian to be the derivative of the residual actually being minimized -- feeding it a mismatched pair sends every update in the wrong direction. In practice this showed up as chi-squared *diverging* (27 to 4.4e14 across three iterations) once the two bugs above were fixed and the solver could finally run.
+
+**Fix:** Rewrote the error to the local-frame form the Jacobian already assumed, decomposing the ICP transform into `(t_z, theta_z)` and computing `e_trans = R(theta_i)^T (t_j - t_i) - t_z`, `e_theta = wrap_rad(theta_j - theta_i - theta_z)`. Also corrected the Jacobian's `d(e_trans)/d(theta_i)` term, which had a sign error and an extra spurious rotation applied to it.
+
+**Why:** This is the fix that actually made the optimizer converge correctly (chi-squared now drops 12.4 -> 0.81 -> ~0 in 2 iterations) instead of diverging.
+
+### LiDAR scans were reconstructed with the wrong angular offset
+
+**Problem:** `scan_to_matrix` (`src/icp.cpp`) assumes each scan's index 0 points along the robot's +x axis: `angle = idx * 2*M_PI / (num_points - 1)`. `SavedLaserScan` only stores `ranges` -- `angle_min`/`angle_increment` were dropped when the ROSbag was written to binary -- so this angular origin was a guess, and on the TurtleBot 4 the LiDAR mount is rotated relative to the assumption. Every ICP transform came out rotated ~90 degrees from odometry (confirmed by comparing ICP's translation against odometry's on straight segments: `icp=(0.009, 0.504)` vs `odom=(0.493, ~0)` -- same magnitude, wrong axis).
+
+**Fix:** Added `constexpr double SCAN_ANGLE_OFFSET = -M_PI_2;` to the angle computation. Verified by testing all three candidate offsets (`0`, `+pi/2`, `-pi/2`) against odometry -- only `-pi/2` brings ICP within 1-3mm of the odometry-measured translation.
+
+**Why:** Without this, the optimized trajectory came out visibly rotated relative to the pre-optimized route, because ICP -- the constraint the whole graph optimizes against -- was measuring motion in the wrong direction.
+
+### ICP constraints were built from misaligned scans, and one edge was missing
+
+**Problem:** In `main.cpp`, the ICP loop started at `reading_idx = scans.size() - 1` (4136) and stepped down by `STEP_SIZE` (100), landing on scans 4136, 4036, 3936, ... . But pose graph nodes sit at odometry indices 4100, 4000, 3900, ... (multiples of `STEP_SIZE`). Since `4136 % 100 == 36`, every ICP constraint was computed from scans 36 samples away from the nodes it was meant to constrain -- invisible on straight segments, but visibly wrong through turns (it produced spurious "movement" between nodes the robot never actually moved between). The loop's bound (`reading_idx > STEP_SIZE`) also excluded the very last edge, leaving the graph with 40 edges for 42 nodes -- one node had no constraint at all and stayed pinned to its initial pose while its neighbor moved.
+
+**Fix:** Changed the loop to `for (size_t reading_idx = (num_nodes - 1) * STEP_SIZE; reading_idx >= STEP_SIZE; reading_idx -= STEP_SIZE)`, aligning every ICP pair to the exact scan indices the nodes were built from, and including the final edge.
+
+**Why:** This eliminated large per-corner discrepancies between the pre- and post-optimization routes (worst-case jump at a stationary node dropped from 0.465m to 0.087m) and gave every node the constraint it needed.

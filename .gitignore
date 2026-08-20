@@ -44,7 +44,6 @@ install_manifest.txt
 # --- Generated test or data artifacts ---
 *.pcd
 *.ply
-*.png
 *.jpg
 *.npy
 *.bin

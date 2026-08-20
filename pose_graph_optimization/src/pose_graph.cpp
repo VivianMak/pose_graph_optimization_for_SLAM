@@ -1,6 +1,7 @@
 #include "pose_graph.hpp"
 #include <cmath>
 #include <iostream>
+#include <random>
 
 int STEP_SIZE = 100;
 
@@ -12,7 +13,8 @@ PoseGraph::PoseGraph()
 }
 
 void PoseGraph::build(const std::vector<SavedLaserScan>& scans,
-                      const std::vector<SavedOdom>& odoms)
+                      const std::vector<SavedOdom>& odoms,
+                      const NoiseConfig& noise)
 {
     /*
      * Build the pose graph from odometry and scans.
@@ -30,12 +32,67 @@ void PoseGraph::build(const std::vector<SavedLaserScan>& scans,
     nodes_.clear();
     edge_indices_.clear();
 
-    // Create one Node per odometry entry
-    for (std::size_t i = 0; i < odoms.size(); i+=STEP_SIZE) {
-        // auto temp = odoms[i];
-        // std::cout << *temp << std::endl;
-        utils::Pose p = odomToPose(odoms[i]);
-        nodes_.push_back(std::make_unique<utils::Node>(static_cast<int>(i), p));
+    if (odoms.empty()) {
+        return;
+    }
+
+    if (!noise.enabled) {
+        // Create one Node per odometry entry
+        for (std::size_t i = 0; i < odoms.size(); i+=STEP_SIZE) {
+            // auto temp = odoms[i];
+            // std::cout << *temp << std::endl;
+            utils::Pose p = odomToPose(odoms[i]);
+            nodes_.push_back(std::make_unique<utils::Node>(static_cast<int>(i), p));
+        }
+
+        // Connect consecutive nodes with edges
+        addSequentialEdges();
+        return;
+    }
+
+    // --- Simulated drift ---
+    // Walk EVERY odom sample (not just the subsampled ones) so the drift
+    // accumulates at the rate real odometry would, then snapshot a node every
+    // STEP_SIZE samples. Sampling the noise only at the nodes would understate
+    // the compounding by a factor of STEP_SIZE.
+    std::mt19937 rng(noise.seed);
+    std::normal_distribution<double> trans_noise(0.0, noise.sigma_xy);
+    std::normal_distribution<double> rot_noise(0.0, noise.sigma_theta);
+
+    utils::Pose drifted = odomToPose(odoms[0]);
+    nodes_.push_back(std::make_unique<utils::Node>(0, drifted));
+
+    for (std::size_t i = 1; i < odoms.size(); i++) {
+        const utils::Pose prev = odomToPose(odoms[i - 1]);
+        const utils::Pose cur  = odomToPose(odoms[i]);
+
+        // Clean relative motion, rotated into prev's local frame. Odometry error
+        // is a property of the robot's own motion estimate, so it has to be
+        // applied in the body frame, not the world frame.
+        const double dx_w = cur.x - prev.x;
+        const double dy_w = cur.y - prev.y;
+        const double cp = std::cos(prev.theta), sp = std::sin(prev.theta);
+
+        double dx  =  cp * dx_w + sp * dy_w;
+        double dy  = -sp * dx_w + cp * dy_w;
+        double dth = utils::wrap_rad(cur.theta - prev.theta);
+
+        // Corrupt this increment
+        dx  += trans_noise(rng);
+        dy  += trans_noise(rng);
+        dth += rot_noise(rng);
+
+        // Integrate onto the drifted estimate. Because the increment is applied
+        // in the DRIFTED frame, an accumulated heading error bends everything
+        // downstream of it -- the compounding that makes the loop not close.
+        const double cd = std::cos(drifted.theta), sd = std::sin(drifted.theta);
+        drifted.x += cd * dx - sd * dy;
+        drifted.y += sd * dx + cd * dy;
+        drifted.theta = utils::wrap_rad(drifted.theta + dth);
+
+        if (i % STEP_SIZE == 0) {
+            nodes_.push_back(std::make_unique<utils::Node>(static_cast<int>(i), drifted));
+        }
     }
 
     // Connect consecutive nodes with edges
