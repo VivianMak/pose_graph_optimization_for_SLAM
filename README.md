@@ -216,22 +216,12 @@ $$
 
 The Jacobian in this context is used to find the actual $\Delta x$ for each pair of adjacent nodes in order to correct it. The partial derivatives together gives us an adjacency matrix for the linearized system where we can quantify the rate of change for $x, y$ or $\theta$ when any component of the pose of either matricies move. A decomposed version of the matrix for some arbitrary pose $p_i$ and $p_j$ is shown below.
 
-$$
-J_{ij} \;=\;
-\begin{bmatrix}
-\displaystyle
-\frac{\partial e_x}{\partial x_i} & \frac{\partial e_x}{\partial y_i} & \frac{\partial e_x}{\partial \theta_i} &
-\frac{\partial e_x}{\partial x_j} & \frac{\partial e_x}{\partial y_j} & \frac{\partial e_x}{\partial \theta_j} \\
-
-\displaystyle
-\frac{\partial e_y}{\partial x_i} & \frac{\partial e_y}{\partial y_i} & \frac{\partial e_y}{\partial \theta_i} &
-\frac{\partial e_y}{\partial x_j} & \frac{\partial e_y}{\partial y_j} & \frac{\partial e_y}{\partial \theta_j} \\
-
-\displaystyle
-\frac{\partial e_{\theta}}{\partial x_i} & \frac{\partial e_{\theta}}{\partial y_i} & \frac{\partial e_{\theta}}{\partial \theta_i} &
-\frac{\partial e_{\theta}}{\partial x_j} & \frac{\partial e_{\theta}}{\partial y_j} & \frac{\partial e_{\theta}}{\partial \theta_j}
-\end{bmatrix}
-$$
+```text
+J_ij =
+[ ∂e_x/∂x_i   ∂e_x/∂y_i   ∂e_x/∂θ_i   ∂e_x/∂x_j   ∂e_x/∂y_j   ∂e_x/∂θ_j ]
+[ ∂e_y/∂x_i   ∂e_y/∂y_i   ∂e_y/∂θ_i   ∂e_y/∂x_j   ∂e_y/∂y_j   ∂e_y/∂θ_j ]
+[ ∂e_θ/∂x_i   ∂e_θ/∂y_i   ∂e_θ/∂θ_i   ∂e_θ/∂x_j   ∂e_θ/∂y_j   ∂e_θ/∂θ_j ]
+```
 
 **Code Structure**
 ```cpp
